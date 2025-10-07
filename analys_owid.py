@@ -101,3 +101,12 @@ mord = pd.read_csv("https://ourworldindata.org/grapher/homicide-rate-ghe.csv?v=1
 
     # Död i väpnad konflikt
 död_konflikt = pd.read_csv("https://ourworldindata.org/grapher/homicide-rate-ghe.csv?v=1&csvType=full&useColumnShortNames=true", storage_options = {'User-Agent': 'Our World In Data data fetch/1.0'})
+
+   # HAR ALLA DATAFRAMES SAMMA UPPDELNING AV LÄNDER, ELLER NÅGON SOM HAR VÄRLDSDELAR ELLER ANDRA NIVÅER?
+   # VILKET SPANN AV ÅR INRYMMER SAMTLIGA (ELLER SÅ MÅNGA SOM MÖJLIGT) AV DATAFRAMES?
+
+    # SLÅ IHOP DATAFRAMES UTIFRÅN LAND OCH ÅR
+
+    # Multipel regression för att se vilka faktorer som påverkar Demokratiindex
+
+    # "Tidsserieanalys" (det jag lärde mig på statistikkursen) för att estimera Sveriges GDP 2030?
