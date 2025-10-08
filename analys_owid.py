@@ -102,11 +102,103 @@ mord = pd.read_csv("https://ourworldindata.org/grapher/homicide-rate-ghe.csv?v=1
     # Död i väpnad konflikt
 död_konflikt = pd.read_csv("https://ourworldindata.org/grapher/homicide-rate-ghe.csv?v=1&csvType=full&useColumnShortNames=true", storage_options = {'User-Agent': 'Our World In Data data fetch/1.0'})
 
+
+
    # HAR ALLA DATAFRAMES SAMMA UPPDELNING AV LÄNDER, ELLER NÅGON SOM HAR VÄRLDSDELAR ELLER ANDRA NIVÅER?
    # VILKET SPANN AV ÅR INRYMMER SAMTLIGA (ELLER SÅ MÅNGA SOM MÖJLIGT) AV DATAFRAMES?
 
-    # SLÅ IHOP DATAFRAMES UTIFRÅN LAND OCH ÅR
+print(livslängd.head)
+print(livslängd.Year.min(), livslängd.Year.max())
+
+print(barnadödlighet.head)
+print(barnadödlighet.Year.min(), barnadödlighet.Year.max())
+
+print(suicid.head)
+print(suicid.Year.min(), suicid.Year.max())
+
+print(alkohol.head)
+print(alkohol.Year.min(), alkohol.Year.max())
+
+print(fetma.head)
+print(fetma.Year.min(), fetma.Year.max())
+
+print(hdi.head)
+print(hdi.Year.min(), hdi.Year.max())
+
+print(hri.head)
+print(hri.Year.min(), hri.Year.max())
+
+print(demokrati.head)
+print(demokrati.Year.min(), demokrati.Year.max())
+
+print(co2.head)
+print(co2.Year.min(), co2.Year.max())
+
+print(energi.head)
+print(energi.Year.min(), energi.Year.max())
+
+print(utbildning.head)
+print(utbildning.Year.min(), utbildning.Year.max())
+
+print(sjukvård.head)
+print(sjukvård.Year.min(), sjukvård.Year.max())
+
+print(wpe.head)
+print(wpe.Year.min(), wpe.Year.max())
+
+print(lön.head)
+print(lön.Year.min(), lön.Year.max())
+
+print(andel_kvinnor_arbete.head)
+print(andel_kvinnor_arbete.Year.min(), andel_kvinnor_arbete.Year.max())
+
+print(arbetstimmar.head)
+print(arbetstimmar.Year.min(), arbetstimmar.Year.max())
+
+print(skolår.head)
+print(skolår.Year.min(), skolår.Year.max())
+
+print(bistånd.head)
+print(bistånd.Year.min(), bistånd.Year.max())
+
+print(skatt.head)
+print(skatt.Year.min(), skatt.Year.max())
+
+print(statligautgifter.head)
+print(statligautgifter.Year.min(), statligautgifter.Year.max())
+
+print(gini.head)
+print(gini.Year.min(), gini.Year.max())
+
+print(gdp.head)
+print(gdp.Year.min(), gdp.Year.max())
+
+print(handel.head)
+print(handel.Year.min(), handel.Year.max())
+
+print(livstillfredsställelse.head)
+print(livstillfredsställelse.Year.min(), livstillfredsställelse.Year.max())
+
+print(hushåll.head)
+print(hushåll.Year.min(), hushåll.Year.max())
+
+print(barn.head)
+print(barn.Year.min(), barn.Year.max())
+
+print(korruption.head)
+print(korruption.Year.min(), korruption.Year.max())
+
+print(mord.head)
+print(mord.Year.min(), mord.Year.max())
+
+print(död_konflikt.head)
+print(död_konflikt.Year.min(), död_konflikt.Year.max())
+
 
     # Multipel regression för att se vilka faktorer som påverkar Demokratiindex
+
+    # SLÅ IHOP DATAFRAMES UTIFRÅN LAND OCH ÅR
+        # Ta responsmåttet och left join med df som har samma land och år
+
 
     # "Tidsserieanalys" (det jag lärde mig på statistikkursen) för att estimera Sveriges GDP 2030?
