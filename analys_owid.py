@@ -201,4 +201,7 @@ print(död_konflikt.Year.min(), död_konflikt.Year.max())
         # Ta responsmåttet och left join med df som har samma land och år
 
 
+
     # "Tidsserieanalys" (det jag lärde mig på statistikkursen) för att estimera Sveriges GDP 2030?
+
+
