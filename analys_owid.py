@@ -1,6 +1,7 @@
 import pandas as pd
-import numpy as np
+import seaborn as sns
 import matplotlib.pyplot as plt
+import numpy as np
 from sklearn.preprocessing import scale
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
@@ -9,6 +10,7 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import openpyxl
+import statsmodels.formula.api as smf
 from functools import reduce
 from turtle import write
 
@@ -164,7 +166,7 @@ död_konflikt = död_konflikt[['land', 'år', 'död_i_konflikt_percapita']]
 
     # VILKET SPANN AV ÅR INRYMMER SAMTLIGA (ELLER SÅ MÅNGA SOM MÖJLIGT) AV DATAFRAMES?
     # Min = 2011, men de flesta har från 1990
-    # Max = 2017, men de flesta har till 2023, något fler har 2011
+    # Max = 2017, men de flesta har till 2023, något fler har 2021
 
     # SLÅ IHOP DATAFRAMES UTIFRÅN LAND OCH ÅR
 dataramar = [
@@ -210,12 +212,53 @@ data = reduce(
 )
 
 
-    # Corrplot för att se vilka faktorer som korrelerar med varandra
+    # Exkludera år och land, samt inkludera endast siffror från 2023
+model_data = data[data['år'] == 2021]
+model_data = model_data.drop(columns=['land', 'år'])
+model_data = model_data.dropna(axis=1, how='all')
+
+
+    # Corrplot
+corrplt = model_data.corr()
+
+plt.figure(figsize=(12, 10))
+sns.heatmap(corrplt,
+            annot=False,
+            cmap="coolwarm",
+            vmin=-1,
+            vmax=1,
+            square=True)
+
+plt.title("Correlation Matrix")
+plt.show()
 
 
     # Multipel regression för att se vilka faktorer som påverkar Demokratiindex
+model_demokratiindex = smf.ols(
+    "demokratiindex ~ age + education + experience",
+    data=model_data
+).fit()
+
+print(model_demokratiindex.summary())
+
+
+
+    # -..- Gini-koefficient
+
+    # Fynd från corrplot: Ökad gini = minskat lönegap. Vidare undersökning visar att gini är som lägst i medelinkomstländer, vilket man tror beror på att endast kvinnor med goda kvalifikationer är i arbete i många av dessa länder.
+    # Visualisering av detta i form av lönegap vs gdp per capita, logaritmisk x-axelskala
+
+    # Multipel regression
+model_gini = smf.ols(
+    "gini ~ age + education + experience",
+    data=model_data
+).fit()
+
+print(model_gini.summary())
+
 
 
     # "Tidsserieanalys" (det jag lärde mig på statistikkursen) för att estimera Sveriges GDP 2030?
 
 
+    # Någon typ av maskininlärning för att predicera om ett land är en demokrati eller inte utifrån de andra faktorerna (exkl. demokratiindex)?
