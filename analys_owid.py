@@ -6,11 +6,13 @@ from sklearn.preprocessing import scale
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from statsmodels.stats.outliers_influence import variance_inflation_factor
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import openpyxl
-import statsmodels.formula.api as smf
+import statsmodels.api as sm
 from functools import reduce
 from turtle import write
 
@@ -217,6 +219,19 @@ model_data = data[data['år'] == 2021]
 model_data = model_data.drop(columns=['land', 'år'])
 model_data = model_data.dropna(axis=1, how='all')
 
+    # Undersök hur många värden som är NaN per land
+missing_share = model_data.isna().mean(axis=1)
+
+    # Hög andel missing data för många variabler
+
+    # Exkludera länder med mer än 25% NaN-värden
+model_data = model_data[missing_share <= 0.25]
+
+    ##### JUST NU:
+    # BEHÖVER TA HÄNSYN TILL MÅNGA NA-VÄRDEN
+    # ÄR DET SAMMA VARIABLER SOM HAR NA-VÄRDEN? I SÅ FALL KAN MAN BEHÖVER RENSA VARIABLER
+    # OM DET ÄR SPRIDNING MELLAN LÄNDER I VILKA VARIABLER SOM HAR NA...
+    # ... IMPUTERING MED NÅGON METOD FÖR ATT FYLLA UT NA-VÄRDEN UTIFRÅN EX. MEDIAN ELLER MEDIANEN FRÅN "LIKNANDE LÄNDER"
 
     # Corrplot
 corrplt = model_data.corr()
@@ -232,18 +247,38 @@ sns.heatmap(corrplt,
 plt.title("Correlation Matrix")
 plt.show()
 
+    # Multipel regression
 
-    # Multipel regression för att se vilka faktorer som påverkar Demokratiindex
-model_demokratiindex = smf.ols(
-    "demokratiindex ~ age + education + experience",
-    data=model_data
-).fit()
+    # Demokratiindex som beroende variabel
 
-print(model_demokratiindex.summary())
+y = model_data["demokratiindex"]
+X = model_data.drop(columns=["demokratiindex"])
+
+X = sm.add_constant(X)
+
+model = sm.OLS(y, X).fit()
+
+print(model.summary())
+
+    # För hög multikollinearitet, genomför VIF-analys
+vif_df = pd.DataFrame()
+vif_df["variable"] = X.columns
+vif_df["VIF"] = [
+    variance_inflation_factor(X.values, i)
+    for i in range(X.shape[1])
+]
+
+vif_df = vif_df[vif_df["variable"] != "const"]
+print(vif_df.sort_values("VIF", ascending=False))
+
+    # Använd robust standardfel (HC3) för att hantera heteroskedasticitet
+model = sm.OLS(y, X).fit(cov_type="HC3")
 
 
 
-    # -..- Gini-koefficient
+
+
+    # Gini-koefficient som beroende variabel
 
     # Fynd från corrplot: Ökad gini = minskat lönegap. Vidare undersökning visar att gini är som lägst i medelinkomstländer, vilket man tror beror på att endast kvinnor med goda kvalifikationer är i arbete i många av dessa länder.
     # Visualisering av detta i form av lönegap vs gdp per capita, logaritmisk x-axelskala
