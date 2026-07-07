@@ -8,6 +8,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from statsmodels.stats.outliers_influence import variance_inflation_factor
+from sklearn.impute import SimpleImputer
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -15,6 +16,7 @@ import openpyxl
 import statsmodels.api as sm
 from functools import reduce
 from turtle import write
+from sklearn.preprocessing import StandardScaler
 
 
   # LADDA OCH PREPPA DATASET
@@ -23,11 +25,6 @@ from turtle import write
 livslängd = pd.read_csv("https://ourworldindata.org/grapher/life-expectancy.csv?v=1&csvType=full&useColumnShortNames=true", storage_options = {'User-Agent': 'Our World In Data data fetch/1.0'})
 livslängd.columns = ['land', 'kod', 'år', 'livslängd']
 livslängd = livslängd[['land', 'år', 'livslängd']]
-
-    # Barnadödlighet (innan 5 år)
-barnadödlighet = pd.read_csv("https://ourworldindata.org/grapher/child-mortality-igme.csv?v=1&csvType=full&useColumnShortNames=true", storage_options = {'User-Agent': 'Our World In Data data fetch/1.0'})
-barnadödlighet.columns = ['land', 'kod', 'år', 'barnadödlighet']
-barnadödlighet = barnadödlighet[['land', 'år', 'barnadödlighet']]
 
     # Suicid (per 100 000 invånare)
 suicid = pd.read_csv("https://ourworldindata.org/grapher/death-rate-from-suicides-gho.csv?v=1&csvType=full&useColumnShortNames=true", storage_options = {'User-Agent': 'Our World In Data data fetch/1.0'})
@@ -48,11 +45,6 @@ fetma = fetma[['land', 'år', 'fetma_andel']]
 hdi = pd.read_csv("https://ourworldindata.org/grapher/human-development-index.csv?v=1&csvType=full&useColumnShortNames=true", storage_options = {'User-Agent': 'Our World In Data data fetch/1.0'})
 hdi.columns = ['land', 'kod', 'år', 'hdi', 'region']
 hdi = hdi[['land', 'år', 'hdi']]
-
-    # Human Rights Index
-hri = pd.read_csv("https://ourworldindata.org/grapher/human-rights-index-vdem.csv?v=1&csvType=full&useColumnShortNames=true", storage_options = {'User-Agent': 'Our World In Data data fetch/1.0'})
-hri.columns = ['land', 'kod', 'år', 'hri', 'region']
-hri = hri[['land', 'år', 'hri']]
 
     # Demokratiindex
 demokrati = pd.read_csv('data/electoral-democracy-index.csv')
@@ -78,11 +70,6 @@ utbildning = utbildning[['land', 'år', 'utbildning_andel_gdp']]
 sjukvård = pd.read_csv("https://ourworldindata.org/grapher/public-health-expenditure-share-gdp.csv?v=1&csvType=full&useColumnShortNames=true", storage_options = {'User-Agent': 'Our World In Data data fetch/1.0'})
 sjukvård.columns = ['land', 'kod', 'år', 'sjukvård_andel_gdp']
 sjukvård = sjukvård[['land', 'år', 'sjukvård_andel_gdp']]
-
-    # Womens Political Empowerment Index
-wpe = pd.read_csv("https://ourworldindata.org/grapher/women-political-empowerment-index.csv?v=1&csvType=full&useColumnShortNames=true", storage_options = {'User-Agent': 'Our World In Data data fetch/1.0'})
-wpe.columns = ['land', 'kod', 'år', 'wpe_index', 'region']
-wpe = wpe[['land', 'år', 'wpe_index']]
 
     # Lönegap mellan könen
 lönegap = pd.read_csv("https://ourworldindata.org/grapher/gender-gap-in-average-wages-ilo.csv?v=1&csvType=full&useColumnShortNames=true", storage_options = {'User-Agent': 'Our World In Data data fetch/1.0'})
@@ -159,8 +146,8 @@ mord.columns = ['land', 'kod', 'år', 'mord_percapita', 'region']
 mord = mord[['land', 'år', 'mord_percapita']]
 
     # Död i väpnad konflikt
-död_konflikt = pd.read_csv("https://ourworldindata.org/grapher/homicide-rate-ghe.csv?v=1&csvType=full&useColumnShortNames=true", storage_options = {'User-Agent': 'Our World In Data data fetch/1.0'})
-död_konflikt.columns = ['land', 'kod', 'år', 'död_i_konflikt_percapita', 'region']
+död_konflikt = pd.read_csv("https://ourworldindata.org/grapher/deaths-in-armed-conflicts.csv?v=1&csvType=full&useColumnShortNames=true", storage_options = {'User-Agent': 'Our World In Data data fetch/1.0'})
+död_konflikt.columns = ['land', 'kod', 'år', 'död_i_konflikt_percapita_hög', 'död_i_konflikt_percapita', 'död_i_konflikt_percapita_låg']
 död_konflikt = död_konflikt[['land', 'år', 'död_i_konflikt_percapita']]
 
 
@@ -173,18 +160,15 @@ död_konflikt = död_konflikt[['land', 'år', 'död_i_konflikt_percapita']]
     # SLÅ IHOP DATAFRAMES UTIFRÅN LAND OCH ÅR
 dataramar = [
     livslängd,
-    barnadödlighet,
     suicid,
     alkohol,
     fetma,
     hdi,
-    hri,
     demokrati,
     co2,
     energi,
     utbildning,
     sjukvård,
-    wpe,
     lönegap,
     andel_kvinnor_arbete,
     arbetstimmar,
@@ -222,16 +206,17 @@ model_data = model_data.dropna(axis=1, how='all')
     # Undersök hur många värden som är NaN per land
 missing_share = model_data.isna().mean(axis=1)
 
-    # Hög andel missing data för många variabler
+    # Noterat att det är en hög andel värden som är NaN
 
     # Exkludera länder med mer än 25% NaN-värden
 model_data = model_data[missing_share <= 0.25]
 
-    ##### JUST NU:
-    # BEHÖVER TA HÄNSYN TILL MÅNGA NA-VÄRDEN
-    # ÄR DET SAMMA VARIABLER SOM HAR NA-VÄRDEN? I SÅ FALL KAN MAN BEHÖVER RENSA VARIABLER
-    # OM DET ÄR SPRIDNING MELLAN LÄNDER I VILKA VARIABLER SOM HAR NA...
-    # ... IMPUTERING MED NÅGON METOD FÖR ATT FYLLA UT NA-VÄRDEN UTIFRÅN EX. MEDIAN ELLER MEDIANEN FRÅN "LIKNANDE LÄNDER"
+    # Fyra variabler med hög andel NaN-värden som exkluderas
+model_data = model_data.drop(columns=['sjukvård_andel_gdp', 'gini', 'lönegap', 'bistånd_andel_bni'])
+
+    # Imputering av resterande NaN-värden med medianen för respektive variabel
+imputer = SimpleImputer(strategy='median')
+model_data[model_data.columns] = imputer.fit_transform(model_data)
 
     # Corrplot
 corrplt = model_data.corr()
@@ -248,15 +233,32 @@ plt.title("Correlation Matrix")
 plt.show()
 
     # Multipel regression
-
-    # Demokratiindex som beroende variabel
-
+# Demokratiindex som beroende variabel
 y = model_data["demokratiindex"]
+
+# X-variabler
 X = model_data.drop(columns=["demokratiindex"])
 
-X = sm.add_constant(X)
+# Spara kolumnnamn och index innan transformation
+X_columns = X.columns
+X_index = X.index
 
-model = sm.OLS(y, X).fit()
+# Standardisera
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Återskapa DataFrame
+X_scaled = pd.DataFrame(
+    X_scaled,
+    columns=X_columns,
+    index=X_index
+)
+
+# Lägg till intercept
+X_scaled = sm.add_constant(X_scaled)
+
+# OLS med robusta standardfel
+model = sm.OLS(y, X_scaled).fit(cov_type="HC3")
 
 print(model.summary())
 
@@ -271,25 +273,115 @@ vif_df["VIF"] = [
 vif_df = vif_df[vif_df["variable"] != "const"]
 print(vif_df.sort_values("VIF", ascending=False))
 
-    # Använd robust standardfel (HC3) för att hantera heteroskedasticitet
+    # Ta bort hdi pga hög VIF (42). HDI är en sammansatt variabel som påverkas av utbildning, hälsa och inkomst, vilket förklarar den höga VIF:en.
+X = X.drop(columns=['hdi'])
+
+    # Gör om VIF-analysen efter borttagning av HDI
+
+vif_df = pd.DataFrame()
+vif_df["variable"] = X.columns
+vif_df["VIF"] = [
+    variance_inflation_factor(X.values, i)
+    for i in range(X.shape[1])
+]
+
+vif_df = vif_df[vif_df["variable"] != "const"]
+print(vif_df.sort_values("VIF", ascending=False))
+
+    # OK
+
+X = sm.add_constant(X)
+
 model = sm.OLS(y, X).fit(cov_type="HC3")
 
+print(model.summary())
+
+    # Färdig summering av vilka variabler som hänger ihop med demokratiindex, alltså - hur tenderar länder med högre demokratiindex se ut? Mer av X, Y, Z men mindre av A, B, C.
+
+
+    # Nu - skapa en modell som så bra som möjligt predicerar demokratiindex OBEROENDE AV ÖVRIGA VARIABLER.
+    # Genom att exkludera variabler som är icke statistiskt signifikanta
+
+X = X.drop(columns=['mord_percapita', 'död_i_konflikt_percapita', 'skolår'])
+
+X = sm.add_constant(X)
+
+model = sm.OLS(y, X).fit(cov_type="HC3")
+
+print(model.summary())
+
+    # Ytterligare justeringar
+X = X.drop(columns=['livslängd', 'utbildning_andel_gdp'])
+
+X = sm.add_constant(X)
+
+model = sm.OLS(y, X).fit(cov_type="HC3")
+
+print(model.summary())
+
+    # Ytterligare justeringar
+X = X.drop(columns=['suicid/100k', 'skatt_andel_bnp'])
+
+X = sm.add_constant(X)
+
+model = sm.OLS(y, X).fit(cov_type="HC3")
+
+print(model.summary())
+
+    # Ytterligare justeringar
+X = X.drop(columns=['gdp_per_capita'])
+
+X = sm.add_constant(X)
+
+model = sm.OLS(y, X).fit(cov_type="HC3")
+
+print(model.summary())
+
+    # Ytterligare justeringar
+X = X.drop(columns=['andel_kvinnor_arbete', 'handel_andel_gdp', 'fetma_andel'])
+
+X = sm.add_constant(X)
+
+model = sm.OLS(y, X).fit(cov_type="HC3")
+
+print(model.summary())
+
+  # Ytterligare justeringar
+X = X.drop(columns=['energi_percapita'])
+
+X = sm.add_constant(X)
+
+model = sm.OLS(y, X).fit(cov_type="HC3")
+
+print(model.summary())
+
+    # Färdig modell där samtliga är statistiskt signifikanta!
+    # Sista VIF-analys
+
+vif_df = pd.DataFrame()
+vif_df["variable"] = X.columns
+vif_df["VIF"] = [
+    variance_inflation_factor(X.values, i)
+    for i in range(X.shape[1])
+]
+
+vif_df = vif_df[vif_df["variable"] != "const"]
+print(vif_df.sort_values("VIF", ascending=False))
+
+    # Betydligt bättre VIF-värden, vilket indikerar att variablerna är relativt oberoende av varandra.
+  
+    # "En initial modell inkluderade ett större antal samhällsindikatorer och användes deskriptivt för att identifiera potentiella samband. Därefter reducerades modellen genom att exkludera variabler utan statistiskt stöd samt indikatorer med stark konceptuell överlappning. Den reducerade modellen används för att identifiera variabler som uppvisar samband med demokratiindex när övriga inkluderade faktorer hålls konstanta."
+
+    # Starkast association med demokratiindex, i ordning: Korruptionsindex (negativ korrelation), livstillfredsställelse, barn per kvinna, co2-utsläpp per capita, statliga utgifter som andel av BNP.
 
 
 
 
     # Gini-koefficient som beroende variabel
-
     # Fynd från corrplot: Ökad gini = minskat lönegap. Vidare undersökning visar att gini är som lägst i medelinkomstländer, vilket man tror beror på att endast kvinnor med goda kvalifikationer är i arbete i många av dessa länder.
     # Visualisering av detta i form av lönegap vs gdp per capita, logaritmisk x-axelskala
 
     # Multipel regression
-model_gini = smf.ols(
-    "gini ~ age + education + experience",
-    data=model_data
-).fit()
-
-print(model_gini.summary())
 
 
 
