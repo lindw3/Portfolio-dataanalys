@@ -1,0 +1,65 @@
+[
+  {
+    "objectID": "utforskande-analys.html",
+    "href": "utforskande-analys.html",
+    "title": "Utforskande analys",
+    "section": "",
+    "text": "Jag kombinerade 26 internationella dataset från Our World in Data för att skapa en gemensam databas över samhällsindikatorer.\nDataseten innehåller indikatorer inom flera områden:\n\n\n\nOmråde\nVariabler\n\n\n\n\nHälsa\nLivslängd, suicid, fetma\n\n\nEkonomi\nBNP per capita, handel\n\n\nInstitutioner\nDemokratiindex, korruption\n\n\nSociala faktorer\nLivstillfredsställelse, utbildning\n\n\nJämställdhet\nLönegap, kvinnors arbetskraftsdeltagande\n\n\n\nAnalysen begränsades till år 2021 eftersom detta var det år där flest indikatorer hade tillräcklig täckning. Korrelationsanalysen baserades på tillgängliga observationer för respektive indikatorpar.\n\n\nCode\nfrom scripts.exploration import (\n    corr_data,\n    create_corrplot,\n    lönegap_gini,\n    gdp_gini,\n    lönegap_gdp,\n    plot_gini_vs_lönegap,\n    plot_gdp_vs_gini,\n    plot_gdp_vs_lönegap\n)"
+  },
+  {
+    "objectID": "utforskande-analys.html#dataset",
+    "href": "utforskande-analys.html#dataset",
+    "title": "Utforskande analys",
+    "section": "",
+    "text": "Jag kombinerade 26 internationella dataset från Our World in Data för att skapa en gemensam databas över samhällsindikatorer.\nDataseten innehåller indikatorer inom flera områden:\n\n\n\nOmråde\nVariabler\n\n\n\n\nHälsa\nLivslängd, suicid, fetma\n\n\nEkonomi\nBNP per capita, handel\n\n\nInstitutioner\nDemokratiindex, korruption\n\n\nSociala faktorer\nLivstillfredsställelse, utbildning\n\n\nJämställdhet\nLönegap, kvinnors arbetskraftsdeltagande\n\n\n\nAnalysen begränsades till år 2021 eftersom detta var det år där flest indikatorer hade tillräcklig täckning. Korrelationsanalysen baserades på tillgängliga observationer för respektive indikatorpar.\n\n\nCode\nfrom scripts.exploration import (\n    corr_data,\n    create_corrplot,\n    lönegap_gini,\n    gdp_gini,\n    lönegap_gdp,\n    plot_gini_vs_lönegap,\n    plot_gdp_vs_gini,\n    plot_gdp_vs_lönegap\n)"
+  },
+  {
+    "objectID": "utforskande-analys.html#identifierade-samband",
+    "href": "utforskande-analys.html#identifierade-samband",
+    "title": "Utforskande analys",
+    "section": "Identifierade samband",
+    "text": "Identifierade samband\nNågra samband som undersöktes vidare:\n\nGini-koefficienten uppvisade ett negativt samband med lönegapet.\nGini-koefficienten uppvisade även ett negativt samband med BNP per capita.\nSambandet mellan ekonomisk utveckling, ojämlikhet och könsskillnader i lön undersöktes därför vidare genom separata visualiseringar."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Dataanalysportfolio",
+    "section": "",
+    "text": "Denna portfolio presenterar en analys av globala samhällsindikatorer med data från Our World in Data.\nSyftet är att demonstrera ett komplett dataanalysflöde:\n\ninsamling och bearbetning av data\nexplorativ dataanalys\nvisualisering\nkorrelationsanalys\nmultipel regressionsanalys\n\n\n\n\nSamtliga huvudsakliga dataset kommer från Our World in Data.\nDatabasen sammanställer internationell statistik från bland annat:\n\nVärldsbanken\nFN-organ\nWHO\nakademiska forskningsprojekt\n\n\n\n\nProjektet undersöker bland annat:\n\nHur samvarierar olika samhällsindikatorer?\nVilka faktorer är associerade med demokratiindex?\nHur förändras samband när andra faktorer kontrolleras för?\n\n\n\n\nAnalysen använder:\n\nPandas för databearbetning\nSeaborn/Altair för visualisering\nKorrelationsanalys\nOrdinary Least Squares (OLS)\nRobust standardfel\nVIF-analys för multikollinearitet"
+  },
+  {
+    "objectID": "index.html#om-projektet",
+    "href": "index.html#om-projektet",
+    "title": "Dataanalysportfolio",
+    "section": "",
+    "text": "Denna portfolio presenterar en analys av globala samhällsindikatorer med data från Our World in Data.\nSyftet är att demonstrera ett komplett dataanalysflöde:\n\ninsamling och bearbetning av data\nexplorativ dataanalys\nvisualisering\nkorrelationsanalys\nmultipel regressionsanalys"
+  },
+  {
+    "objectID": "index.html#data",
+    "href": "index.html#data",
+    "title": "Dataanalysportfolio",
+    "section": "",
+    "text": "Samtliga huvudsakliga dataset kommer från Our World in Data.\nDatabasen sammanställer internationell statistik från bland annat:\n\nVärldsbanken\nFN-organ\nWHO\nakademiska forskningsprojekt"
+  },
+  {
+    "objectID": "index.html#analysfrågor",
+    "href": "index.html#analysfrågor",
+    "title": "Dataanalysportfolio",
+    "section": "",
+    "text": "Projektet undersöker bland annat:\n\nHur samvarierar olika samhällsindikatorer?\nVilka faktorer är associerade med demokratiindex?\nHur förändras samband när andra faktorer kontrolleras för?"
+  },
+  {
+    "objectID": "index.html#metoder",
+    "href": "index.html#metoder",
+    "title": "Dataanalysportfolio",
+    "section": "",
+    "text": "Analysen använder:\n\nPandas för databearbetning\nSeaborn/Altair för visualisering\nKorrelationsanalys\nOrdinary Least Squares (OLS)\nRobust standardfel\nVIF-analys för multikollinearitet"
+  },
+  {
+    "objectID": "multipel-regression.html",
+    "href": "multipel-regression.html",
+    "title": "Multipel regression",
+    "section": "",
+    "text": "Frågeställning\nVilka samhällsfaktorer är associerade med demokratiindex när andra faktorer hålls konstanta?\n\n\nModellstrategi\nDen initiala modellen inkluderade ett större antal indikatorer.\nProcessen bestod av:\n\nStandardisering av prediktorer\nOLS-regression\nRobust standardfel (HC3)\nKontroll av multikollinearitet\nSuccessiv reducering\n\n\n\nMultikollinearitet\nHDI exkluderades efter VIF-analys då variabeln hade stark konceptuell överlappning med exempelvis utbildning och hälsa.\n\n\nCode\n# VIF-tabell\n\n\n\n\nSlutlig modell\nDen slutliga modellen innehöll endast statistiskt signifikanta variabler.\n\n\nCode\n# regression summary / tabell\n\n\n\n\nResultat\nDe starkaste associationerna med demokratiindex observerades för:\n\nkorruption\nlivstillfredsställelse\nfertilitet\nCO₂-utsläpp\nstatliga utgifter"
+  }
+]

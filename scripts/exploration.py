@@ -50,7 +50,7 @@ def create_corrplot(corr_data):
         "Correlation Matrix"
     )
 
-    return plt.gcf()
+    plt.show()
 
 
 # Fynd från corrplot: Ökad gini-koefficient = minskat lönegap.

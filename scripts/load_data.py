@@ -33,16 +33,6 @@ def load_data():
     datasets.append(suicid)
 
 
-    # Alkohol
-    alkohol = pd.read_csv(
-        "https://ourworldindata.org/grapher/total-alcohol-consumption-per-capita-litres-of-pure-alcohol.csv?v=1&csvType=full&useColumnShortNames=true",
-        **OWID_HEADERS
-    )
-    alkohol.columns = ["land", "kod", "år", "alkohol_percapita"]
-    alkohol = alkohol[["land", "år", "alkohol_percapita"]]
-    datasets.append(alkohol)
-
-
     # Fetma
     fetma = pd.read_csv(
         "https://ourworldindata.org/grapher/share-of-adults-defined-as-obese.csv?v=1&csvType=full&useColumnShortNames=true",
@@ -161,23 +151,6 @@ def load_data():
         ["land", "år", "andel_kvinnor_arbete"]
     ]
     datasets.append(andel_kvinnor_arbete)
-
-
-    # Arbetstimmar
-    arbetstimmar = pd.read_csv(
-        "https://ourworldindata.org/grapher/annual-working-hours-per-person-employed.csv?v=1&csvType=full&useColumnShortNames=true",
-        **OWID_HEADERS
-    )
-    arbetstimmar.columns = [
-        "land",
-        "kod",
-        "år",
-        "arbetstimmar"
-    ]
-    arbetstimmar = arbetstimmar[
-        ["land", "år", "arbetstimmar"]
-    ]
-    datasets.append(arbetstimmar)
 
 
     # Skolår
