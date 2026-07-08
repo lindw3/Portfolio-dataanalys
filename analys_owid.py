@@ -2,6 +2,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
+import altair as alt
 from sklearn.preprocessing import scale
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
@@ -9,6 +10,7 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -16,7 +18,6 @@ import openpyxl
 import statsmodels.api as sm
 from functools import reduce
 from turtle import write
-from sklearn.preprocessing import StandardScaler
 
 
   # LADDA OCH PREPPA DATASET
@@ -198,7 +199,7 @@ data = reduce(
 )
 
 
-    # Exkludera år och land, samt inkludera endast siffror från 2023
+    # Exkludera år och land, samt inkludera endast siffror från 2021
 model_data = data[data['år'] == 2021]
 model_data = model_data.drop(columns=['land', 'år'])
 model_data = model_data.dropna(axis=1, how='all')
@@ -231,6 +232,228 @@ sns.heatmap(corrplt,
 
 plt.title("Correlation Matrix")
 plt.show()
+
+
+
+    # Fynd från corrplot: Ökad gini = minskat lönegap.
+    # Fynd från corrplot: Ökad GDP per capita = lägre gini
+    # Undersök dessa samband!
+
+    # Gini vs lönegap - innebär ökad omjämlikhet totalt sett även omjämlikhet mellan könen?
+
+lönegap_gini = data[['land', 'år', 'lönegap', 'gini']].dropna()
+lönegap_gini = lönegap_gini[lönegap_gini['år'] == 2021]
+
+# Visualisering: lönegap vs Gini-koefficient
+
+points = (
+    alt.Chart(lönegap_gini)
+    .mark_circle(size=70)
+    .encode(
+        x=alt.X(
+            "gini:Q",
+            title="Gini-koefficient",
+            scale=alt.Scale(
+                domain=[0.2, 0.6]
+            ),
+            axis=alt.Axis(
+                format=".2f"
+            )
+        ),
+        y=alt.Y(
+            "lönegap:Q",
+            title="Ojusterat lönegap",
+            scale=alt.Scale(
+                domain=[-30, 40]
+            ),
+            axis=alt.Axis(
+                labelExpr="datum.value + '%'"
+            )
+        ),
+        tooltip=[
+            alt.Tooltip(
+                "land:N",
+                title="Land"
+            ),
+            alt.Tooltip(
+                "gini:Q",
+                title="Gini-koefficient",
+                format=".1f"
+            ),
+            alt.Tooltip(
+                "lönegap:Q",
+                title="Lönegap, %",
+                format=".1f"
+            )
+        ]
+    )
+)
+
+# Horisontell referenslinje vid y = 0
+zero_line = (
+    alt.Chart(pd.DataFrame({"y": [0]}))
+    .mark_rule(strokeWidth=2, color="black")
+    .encode(y="y:Q")
+)
+
+fig = (
+    (zero_line + points)
+    .properties(
+        width=850,
+        height=350
+    )
+    .configure_view(
+        stroke=None
+    )
+    .configure_axis(
+        gridColor="#e6e6e6",
+        gridWidth=0.8,
+        domain=False,
+        tickColor="#999",
+        labelFontSize=12,
+        titleFontSize=15
+    )
+    .interactive()
+)
+
+fig
+
+    # Tydlig trend där högre gini = lägre lönegap, eller snarare övervikt mot kvinnor
+    # Länderna som är på eller under linjen är låg- medelinkomstländer
+
+    # Har noterat i corrplot att gini har en negativ korrelation med gdp per capita
+    # Gini vs GDP per capita
+
+gdp_gini = data[['land', 'år', 'gdp_per_capita', 'gini']].dropna()
+gdp_gini = gdp_gini[gdp_gini['år'] == 2021]
+
+# Huvuddiagram
+points = (
+    alt.Chart(gdp_gini)
+    .mark_circle(size=70)
+    .encode(
+        x=alt.X(
+            "gdp_per_capita:Q",
+            title="GDP per capita ($), logaritmisk skala",
+            scale=alt.Scale(type="log"),
+            axis=alt.Axis(
+                values=[1000, 2500, 5000, 10000, 25000, 50000],
+                format=",.0f"
+            )
+        ),
+        y=alt.Y(
+            "gini:Q",
+            title="Gini-koefficient",
+            scale=alt.Scale(domain=[0.2, 0.6]),
+            axis=alt.Axis(
+                format=".2f"
+            )
+        ),
+        tooltip=[
+    alt.Tooltip("land:N", title="Land"),
+    alt.Tooltip("gdp_per_capita:Q", title="GDP per capita, $", format=",.0f"),
+    alt.Tooltip("gini:Q", title="Gini-koefficient", format=".2f")
+]
+    )
+)
+
+
+fig = (
+    points
+    .properties(
+        width=850,
+        height=350
+    )
+    .configure_view(
+        stroke=None
+    )
+    .configure_axis(
+        gridColor="#e6e6e6",
+        gridWidth=0.8,
+        domain=False,
+        tickColor="#999",
+        labelFontSize=12,
+        titleFontSize=15
+    )
+    .interactive()
+)
+
+fig
+
+    # Figuren visar att gini är högre särskilt i medelinkomstländer, men lägst i höginkomstländer.
+
+
+    # Visualisering av lönegap vs gdp per capita, logaritmisk x-axelskala
+
+    # Hämta ut data för 2022 gällande lönegap och gdp per capita per land
+lönegap_gdp = data[['land', 'år', 'lönegap', 'gdp_per_capita']].dropna()
+lönegap_gdp = lönegap_gdp[lönegap_gdp['år'] == 2022]
+
+    # Visualisering med cirkeldiagram
+
+# Huvuddiagram
+points = (
+    alt.Chart(lönegap_gdp)
+    .mark_circle(size=70)
+    .encode(
+        x=alt.X(
+            "gdp_per_capita:Q",
+            title="GDP per capita ($), logaritmisk skala",
+            scale=alt.Scale(type="log"),
+            axis=alt.Axis(
+                values=[1000, 2500, 5000, 10000, 25000, 50000],
+                format=",.0f"
+            )
+        ),
+        y=alt.Y(
+            "lönegap:Q",
+            title="Ojusterat lönegap",
+            scale=alt.Scale(domain=[-30, 40]),
+            axis=alt.Axis(
+            labelExpr="datum.value + '%'"
+            )
+        ),
+        tooltip=[
+    alt.Tooltip("land:N", title="Land"),
+    alt.Tooltip("gdp_per_capita:Q", title="GDP per capita, $", format=",.0f"),
+    alt.Tooltip("lönegap:Q", title="Lönegap, %", format=".1f")
+]
+    )
+)
+
+# Horisontell referenslinje vid y = 0
+zero_line = (
+    alt.Chart(pd.DataFrame({"y": [0]}))
+    .mark_rule(strokeWidth=2, color="black")
+    .encode(y="y:Q")
+)
+
+fig = (
+    (zero_line + points)
+    .properties(
+        width=850,
+        height=350
+    )
+    .configure_view(
+        stroke=None
+    )
+    .configure_axis(
+        gridColor="#e6e6e6",
+        gridWidth=0.8,
+        domain=False,
+        tickColor="#999",
+        labelFontSize=12,
+        titleFontSize=15
+    )
+    .interactive()
+)
+
+fig
+
+    # Vidare undersökning visar att lönegapet är som lägst i medelinkomstländer, vilket man tror beror på att endast kvinnor med goda kvalifikationer är i arbete i många av dessa länder.
+
+
+
 
     # Multipel regression
 # Demokratiindex som beroende variabel
@@ -377,15 +600,10 @@ print(vif_df.sort_values("VIF", ascending=False))
 
 
 
-    # Gini-koefficient som beroende variabel
-    # Fynd från corrplot: Ökad gini = minskat lönegap. Vidare undersökning visar att gini är som lägst i medelinkomstländer, vilket man tror beror på att endast kvinnor med goda kvalifikationer är i arbete i många av dessa länder.
-    # Visualisering av detta i form av lönegap vs gdp per capita, logaritmisk x-axelskala
+    # Någon typ av maskininlärning för att predicera om ett land är en demokrati eller inte utifrån de andra faktorerna (exkl. demokratiindex)?
 
-    # Multipel regression
+
 
 
 
     # "Tidsserieanalys" (det jag lärde mig på statistikkursen) för att estimera Sveriges GDP 2030?
-
-
-    # Någon typ av maskininlärning för att predicera om ett land är en demokrati eller inte utifrån de andra faktorerna (exkl. demokratiindex)?

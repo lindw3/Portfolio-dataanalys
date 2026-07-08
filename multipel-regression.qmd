@@ -1,0 +1,53 @@
+---
+title: "Multipel regression"
+---
+
+# Frågeställning
+
+Vilka samhällsfaktorer är associerade med demokratiindex 
+när andra faktorer hålls konstanta?
+
+
+# Modellstrategi
+
+Den initiala modellen inkluderade ett större antal indikatorer.
+
+Processen bestod av:
+
+1. Standardisering av prediktorer
+2. OLS-regression
+3. Robust standardfel (HC3)
+4. Kontroll av multikollinearitet
+5. Successiv reducering
+
+
+# Multikollinearitet
+
+HDI exkluderades efter VIF-analys då variabeln hade stark konceptuell 
+överlappning med exempelvis utbildning och hälsa.
+
+
+```{python}
+# VIF-tabell
+```
+
+
+# Slutlig modell
+
+Den slutliga modellen innehöll endast statistiskt signifikanta variabler.
+
+
+```{python}
+# regression summary / tabell
+```
+
+
+# Resultat
+
+De starkaste associationerna med demokratiindex observerades för:
+
+- korruption
+- livstillfredsställelse
+- fertilitet
+- CO₂-utsläpp
+- statliga utgifter

@@ -1,0 +1,52 @@
+---
+title: "Dataanalysportfolio"
+---
+
+# Dataanalys av globala samhällsindikatorer
+
+## Om projektet
+
+Denna portfolio presenterar en analys av globala samhällsindikatorer 
+med data från Our World in Data.
+
+Syftet är att demonstrera ett komplett dataanalysflöde:
+
+- insamling och bearbetning av data
+- explorativ dataanalys
+- visualisering
+- korrelationsanalys
+- multipel regressionsanalys
+
+
+## Data
+
+Samtliga huvudsakliga dataset kommer från 
+[Our World in Data](https://ourworldindata.org/).
+
+Databasen sammanställer internationell statistik från bland annat:
+
+- Världsbanken
+- FN-organ
+- WHO
+- akademiska forskningsprojekt
+
+
+## Analysfrågor
+
+Projektet undersöker bland annat:
+
+- Hur samvarierar olika samhällsindikatorer?
+- Vilka faktorer är associerade med demokratiindex?
+- Hur förändras samband när andra faktorer kontrolleras för?
+
+
+## Metoder
+
+Analysen använder:
+
+- Pandas för databearbetning
+- Seaborn/Altair för visualisering
+- Korrelationsanalys
+- Ordinary Least Squares (OLS)
+- Robust standardfel
+- VIF-analys för multikollinearitet

@@ -1,0 +1,26 @@
+project:
+  type: website
+
+website:
+  title: "William Lind | Dataanalysportfolio"
+
+  navbar:
+    left:
+      - href: index.qmd
+        text: Hem
+
+      - href: utforskande-analys.qmd
+        text: Utforskande analys
+
+      - href: multipel-regression.qmd
+        text: Multipel regression
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-fold: true
+    fig-width: 10
+    fig-height: 5
+
+jupyter: python3
