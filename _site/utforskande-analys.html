@@ -230,7 +230,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <p>Analysen begränsades till år 2021 eftersom detta var det år där flest indikatorer hade tillräcklig täckning. Korrelationsanalysen baserades på tillgängliga observationer för respektive indikatorpar.</p>
-<div id="53e8cc5c" class="cell" data-execution_count="1">
+<div id="3c2b6955" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scripts.exploration <span class="im">import</span> (</span>
@@ -251,7 +251,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Korrelationsanalys</h1>
 <p>För att identifiera övergripande samband mellan samhällsindikatorerna skapades en korrelationsmatris.</p>
 <p>Korrelationsanalysen användes inte för att dra kausala slutsatser, utan som ett explorativt steg för att identifiera samband som kunde undersökas vidare.</p>
-<div id="918d4b14" class="cell" data-execution_count="2">
+<div id="0d0e60ae" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>create_corrplot(corr_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -277,31 +277,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="samband-mellan-gini-koefficient-och-lönegap" class="level1">
 <h1>Samband mellan Gini-koefficient och lönegap</h1>
 <p>Ett första steg var att undersöka om ekonomisk ojämlikhet totalt sett hänger samman med könsskillnader i löner.</p>
-<div id="f61c0197" class="cell" data-execution_count="3">
+<div id="a8a41e47" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>plot_gini_vs_lönegap(lönegap_gini)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="18">
+<div class="cell-output cell-output-display" data-execution_count="3">
 
 <style>
-  #altair-viz-a7304a2af11346ed94bcda43c43c9dce.vega-embed {
+  #altair-viz-c6ff98f167d2410cb43536712059e831.vega-embed {
     width: 100%;
     display: flex;
   }
 
-  #altair-viz-a7304a2af11346ed94bcda43c43c9dce.vega-embed details,
-  #altair-viz-a7304a2af11346ed94bcda43c43c9dce.vega-embed details summary {
+  #altair-viz-c6ff98f167d2410cb43536712059e831.vega-embed details,
+  #altair-viz-c6ff98f167d2410cb43536712059e831.vega-embed details summary {
     position: relative;
   }
 </style>
-<div id="altair-viz-a7304a2af11346ed94bcda43c43c9dce"></div>
+<div id="altair-viz-c6ff98f167d2410cb43536712059e831"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-a7304a2af11346ed94bcda43c43c9dce") {
-      outputDiv = document.getElementById("altair-viz-a7304a2af11346ed94bcda43c43c9dce");
+    if (outputDiv.id !== "altair-viz-c6ff98f167d2410cb43536712059e831") {
+      outputDiv = document.getElementById("altair-viz-c6ff98f167d2410cb43536712059e831");
     }
 
     const paths = {
@@ -359,31 +359,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="samband-mellan-bnp-per-capita-och-gini-koefficient" class="level1">
 <h1>Samband mellan BNP per capita och Gini-koefficient</h1>
 <p>Eftersom Gini-koefficienten varierade mellan olika utvecklingsnivåer undersöktes sambandet med BNP per capita.</p>
-<div id="fcbe68c7" class="cell" data-execution_count="4">
+<div id="3415b7c1" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>plot_gdp_vs_gini(gdp_gini)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="19">
+<div class="cell-output cell-output-display" data-execution_count="4">
 
 <style>
-  #altair-viz-dc2289b80fcc4d82a815c08b7fac4278.vega-embed {
+  #altair-viz-97025e576dfc41d6a4aaa1b855eccd88.vega-embed {
     width: 100%;
     display: flex;
   }
 
-  #altair-viz-dc2289b80fcc4d82a815c08b7fac4278.vega-embed details,
-  #altair-viz-dc2289b80fcc4d82a815c08b7fac4278.vega-embed details summary {
+  #altair-viz-97025e576dfc41d6a4aaa1b855eccd88.vega-embed details,
+  #altair-viz-97025e576dfc41d6a4aaa1b855eccd88.vega-embed details summary {
     position: relative;
   }
 </style>
-<div id="altair-viz-dc2289b80fcc4d82a815c08b7fac4278"></div>
+<div id="altair-viz-97025e576dfc41d6a4aaa1b855eccd88"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-dc2289b80fcc4d82a815c08b7fac4278") {
-      outputDiv = document.getElementById("altair-viz-dc2289b80fcc4d82a815c08b7fac4278");
+    if (outputDiv.id !== "altair-viz-97025e576dfc41d6a4aaa1b855eccd88") {
+      outputDiv = document.getElementById("altair-viz-97025e576dfc41d6a4aaa1b855eccd88");
     }
 
     const paths = {
@@ -440,31 +440,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="samband-mellan-bnp-per-capita-och-lönegap" class="level1">
 <h1>Samband mellan BNP per capita och lönegap</h1>
 <p>Slutligen undersöktes sambandet mellan ekonomisk utveckling och könsskillnader i lön.</p>
-<div id="e032adad" class="cell" data-execution_count="5">
+<div id="ddfb7793" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plot_gdp_vs_lönegap(lönegap_gdp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="20">
+<div class="cell-output cell-output-display" data-execution_count="5">
 
 <style>
-  #altair-viz-180537b06698455e8d4f94c9f1cfdd17.vega-embed {
+  #altair-viz-793ad635fcef428b9c8d3403a16e2aeb.vega-embed {
     width: 100%;
     display: flex;
   }
 
-  #altair-viz-180537b06698455e8d4f94c9f1cfdd17.vega-embed details,
-  #altair-viz-180537b06698455e8d4f94c9f1cfdd17.vega-embed details summary {
+  #altair-viz-793ad635fcef428b9c8d3403a16e2aeb.vega-embed details,
+  #altair-viz-793ad635fcef428b9c8d3403a16e2aeb.vega-embed details summary {
     position: relative;
   }
 </style>
-<div id="altair-viz-180537b06698455e8d4f94c9f1cfdd17"></div>
+<div id="altair-viz-793ad635fcef428b9c8d3403a16e2aeb"></div>
 <script type="text/javascript">
   var VEGA_DEBUG = (typeof VEGA_DEBUG == "undefined") ? {} : VEGA_DEBUG;
   (function(spec, embedOpt){
     let outputDiv = document.currentScript.previousElementSibling;
-    if (outputDiv.id !== "altair-viz-180537b06698455e8d4f94c9f1cfdd17") {
-      outputDiv = document.getElementById("altair-viz-180537b06698455e8d4f94c9f1cfdd17");
+    if (outputDiv.id !== "altair-viz-793ad635fcef428b9c8d3403a16e2aeb") {
+      outputDiv = document.getElementById("altair-viz-793ad635fcef428b9c8d3403a16e2aeb");
     }
 
     const paths = {

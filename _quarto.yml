@@ -15,6 +15,9 @@ website:
       - href: multipel-regression.qmd
         text: Multipel regression
 
+      - href: prediktiv-analys.qmd
+        text: Prediktiv analys
+
 format:
   html:
     theme: cosmo

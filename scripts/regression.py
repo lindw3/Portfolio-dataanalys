@@ -52,8 +52,7 @@ model_data = model_data[
 ]
 
 
-# Dessa indikatorer exkluderas manuellt.
-#
+# Dessa indikatorer exkluderas manuellt
 # Lönegap och Gini analyseras separat i den explorativa delen.
 # Sjukvård och bistånd har för låg täckning.
 model_data = model_data.drop(

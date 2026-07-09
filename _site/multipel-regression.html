@@ -61,7 +61,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -105,6 +105,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -156,7 +159,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#frågeställning" id="toc-frågeställning" class="nav-link active" data-scroll-target="#frågeställning">Frågeställning</a></li>
   <li><a href="#modellstrategi" id="toc-modellstrategi" class="nav-link" data-scroll-target="#modellstrategi">Modellstrategi</a></li>
-  <li><a href="#multikollinearitet" id="toc-multikollinearitet" class="nav-link" data-scroll-target="#multikollinearitet">Multikollinearitet</a></li>
+  <li><a href="#deskriptiv-modell" id="toc-deskriptiv-modell" class="nav-link" data-scroll-target="#deskriptiv-modell">Deskriptiv modell</a></li>
+  <li><a href="#kontroll-av-multikollinearitet" id="toc-kontroll-av-multikollinearitet" class="nav-link" data-scroll-target="#kontroll-av-multikollinearitet">Kontroll av multikollinearitet</a></li>
+  <li><a href="#reducering-av-variabler" id="toc-reducering-av-variabler" class="nav-link" data-scroll-target="#reducering-av-variabler">Reducering av variabler</a></li>
   <li><a href="#slutlig-modell" id="toc-slutlig-modell" class="nav-link" data-scroll-target="#slutlig-modell">Slutlig modell</a></li>
   <li><a href="#resultat" id="toc-resultat" class="nav-link" data-scroll-target="#resultat">Resultat</a></li>
   </ul>
@@ -187,10 +192,142 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="frågeställning" class="level1">
 <h1>Frågeställning</h1>
 <p>Vilka samhällsfaktorer är associerade med demokratiindex när andra faktorer hålls konstanta?</p>
+<div id="22c70e31" class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scripts.regression <span class="im">import</span> (</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>model_data,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>calculate_vif,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>model_initial,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>vif_initial,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>vif_after_hdi,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>model_final,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>vif_final,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>regression_results</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:         demokratiindex   R-squared:                       0.705
+Model:                            OLS   Adj. R-squared:                  0.659
+Method:                 Least Squares   F-statistic:                     30.26
+Date:                Thu, 09 Jul 2026   Prob (F-statistic):           1.91e-35
+Time:                        09:24:11   Log-Likelihood:                 79.178
+No. Observations:                 135   AIC:                            -120.4
+Df Residuals:                     116   BIC:                            -65.16
+Df Model:                          18                                         
+Covariance Type:                  HC3                                         
+==============================================================================================
+                                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+----------------------------------------------------------------------------------------------
+const                          0.3122      0.372      0.839      0.401      -0.417       1.041
+livslängd                      0.0011      0.007      0.174      0.862      -0.012       0.014
+suicid/100k                    0.0022      0.004      0.534      0.594      -0.006       0.010
+fetma_andel                    0.0023      0.002      0.939      0.348      -0.003       0.007
+hdi                           -0.0345      0.780     -0.044      0.965      -1.562       1.493
+co2_percapita                 -0.0178      0.009     -1.998      0.046      -0.035      -0.000
+energi_percapita           -1.363e-06   1.27e-06     -1.071      0.284   -3.86e-06    1.13e-06
+utbildning_andel_gdp           0.0026      0.010      0.264      0.792      -0.017       0.022
+andel_kvinnor_arbete           0.0006      0.001      0.520      0.603      -0.002       0.003
+skolår                         0.0010      0.016      0.061      0.952      -0.031       0.033
+skatt_andel_bnp               -0.0005      0.002     -0.204      0.838      -0.005       0.004
+statligautgifter_andel_bnp     0.0030      0.002      1.217      0.224      -0.002       0.008
+gdp_per_capita              9.708e-07   2.21e-06      0.439      0.660   -3.36e-06     5.3e-06
+handel_andel_gdp              -0.0004      0.000     -0.869      0.385      -0.001       0.000
+livstillfredsställelse         0.0630      0.024      2.678      0.007       0.017       0.109
+barn_per_kvinna               -0.0215      0.024     -0.895      0.371      -0.069       0.026
+korruption_index              -0.4792      0.079     -6.075      0.000      -0.634      -0.325
+mord_percapita              2.333e-05      0.001      0.016      0.987      -0.003       0.003
+död_i_konflikt_percapita   -6.986e-07   4.21e-06     -0.166      0.868   -8.94e-06    7.55e-06
+==============================================================================
+Omnibus:                       11.081   Durbin-Watson:                   1.859
+Prob(Omnibus):                  0.004   Jarque-Bera (JB):               11.761
+Skew:                          -0.598   Prob(JB):                      0.00279
+Kurtosis:                       3.813   Cond. No.                     2.34e+06
+==============================================================================
+
+Notes:
+[1] Standard Errors are heteroscedasticity robust (HC3)
+[2] The condition number is large, 2.34e+06. This might indicate that there are
+strong multicollinearity or other numerical problems.
+                      variable        VIF
+4                          hdi  57.640548
+1                    livslängd  14.243929
+9                       skolår  11.494334
+12              gdp_per_capita   8.855024
+15             barn_per_kvinna   5.460668
+6             energi_percapita   5.177395
+5                co2_percapita   4.233433
+10             skatt_andel_bnp   4.132875
+11  statligautgifter_andel_bnp   3.594037
+16            korruption_index   3.389612
+14      livstillfredsställelse   3.149172
+3                  fetma_andel   2.791518
+8         andel_kvinnor_arbete   1.977248
+2                  suicid/100k   1.768741
+7         utbildning_andel_gdp   1.725288
+17              mord_percapita   1.562660
+13            handel_andel_gdp   1.434958
+18    död_i_konflikt_percapita   1.085799
+                      variable       VIF
+1                    livslängd  7.528331
+11              gdp_per_capita  7.404014
+5             energi_percapita  5.156669
+8                       skolår  4.717647
+4                co2_percapita  4.223140
+14             barn_per_kvinna  4.204239
+9              skatt_andel_bnp  3.928854
+10  statligautgifter_andel_bnp  3.572159
+15            korruption_index  3.380260
+13      livstillfredsställelse  3.102337
+3                  fetma_andel  2.491351
+7         andel_kvinnor_arbete  1.938464
+2                  suicid/100k  1.767178
+6         utbildning_andel_gdp  1.721572
+16              mord_percapita  1.465117
+12            handel_andel_gdp  1.406298
+17    död_i_konflikt_percapita  1.080879
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:         demokratiindex   R-squared:                       0.683
+Model:                            OLS   Adj. R-squared:                  0.670
+Method:                 Least Squares   F-statistic:                     95.29
+Date:                Thu, 09 Jul 2026   Prob (F-statistic):           1.38e-41
+Time:                        09:24:11   Log-Likelihood:                 74.224
+No. Observations:                 135   AIC:                            -136.4
+Df Residuals:                     129   BIC:                            -119.0
+Df Model:                           5                                         
+Covariance Type:                  HC3                                         
+==============================================================================================
+                                 coef    std err          z      P&gt;|z|      [0.025      0.975]
+----------------------------------------------------------------------------------------------
+const                          0.4405      0.150      2.946      0.003       0.147       0.734
+co2_percapita                 -0.0226      0.004     -5.413      0.000      -0.031      -0.014
+statligautgifter_andel_bnp     0.0038      0.002      2.317      0.021       0.001       0.007
+livstillfredsställelse         0.0635      0.017      3.688      0.000       0.030       0.097
+barn_per_kvinna               -0.0242      0.012     -2.009      0.045      -0.048      -0.001
+korruption_index              -0.4749      0.063     -7.519      0.000      -0.599      -0.351
+==============================================================================
+Omnibus:                        9.019   Durbin-Watson:                   1.877
+Prob(Omnibus):                  0.011   Jarque-Bera (JB):                8.974
+Skew:                          -0.548   Prob(JB):                       0.0113
+Kurtosis:                       3.627   Cond. No.                         373.
+==============================================================================
+
+Notes:
+[1] Standard Errors are heteroscedasticity robust (HC3)
+                     variable       VIF
+5            korruption_index  2.071017
+3      livstillfredsställelse  1.944505
+2  statligautgifter_andel_bnp  1.820940
+4             barn_per_kvinna  1.714542
+1               co2_percapita  1.522768</code></pre>
+</div>
+</div>
 </section>
 <section id="modellstrategi" class="level1">
 <h1>Modellstrategi</h1>
-<p>Den initiala modellen inkluderade ett större antal indikatorer.</p>
 <p>Processen bestod av:</p>
 <ol type="1">
 <li>Standardisering av prediktorer</li>
@@ -200,35 +337,708 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Successiv reducering</li>
 </ol>
 </section>
-<section id="multikollinearitet" class="level1">
-<h1>Multikollinearitet</h1>
-<p>HDI exkluderades efter VIF-analys då variabeln hade stark konceptuell överlappning med exempelvis utbildning och hälsa.</p>
-<div id="3c379e25" class="cell" data-execution_count="1">
+<section id="deskriptiv-modell" class="level1">
+<h1>Deskriptiv modell</h1>
+<p>I en första deskriptiv modell inkluderades samtliga variabler för att undersöka vilka variabler som hade positiva respektive negativa samband med demokratiindex.</p>
+<div id="e0c3abfc" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># VIF-tabell</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>model_initial.summary()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<table class="simpletable caption-top table table-sm table-striped small">
+<caption>OLS Regression Results</caption>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Dep. Variable:</th>
+<td>demokratiindex</td>
+<th data-quarto-table-cell-role="th">R-squared:</th>
+<td>0.705</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Model:</th>
+<td>OLS</td>
+<th data-quarto-table-cell-role="th">Adj. R-squared:</th>
+<td>0.659</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Method:</th>
+<td>Least Squares</td>
+<th data-quarto-table-cell-role="th">F-statistic:</th>
+<td>30.26</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Date:</th>
+<td>Thu, 09 Jul 2026</td>
+<th data-quarto-table-cell-role="th">Prob (F-statistic):</th>
+<td>1.91e-35</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Time:</th>
+<td>09:24:11</td>
+<th data-quarto-table-cell-role="th">Log-Likelihood:</th>
+<td>79.178</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">No. Observations:</th>
+<td>135</td>
+<th data-quarto-table-cell-role="th">AIC:</th>
+<td>-120.4</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Df Residuals:</th>
+<td>116</td>
+<th data-quarto-table-cell-role="th">BIC:</th>
+<td>-65.16</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Df Model:</th>
+<td>18</td>
+<th data-quarto-table-cell-role="th"></th>
+<td></td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Covariance Type:</th>
+<td>HC3</td>
+<th data-quarto-table-cell-role="th"></th>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+
+<table class="simpletable caption-top table table-sm table-striped small">
+<tbody>
+<tr class="odd">
+<td></td>
+<th data-quarto-table-cell-role="th">coef</th>
+<th data-quarto-table-cell-role="th">std err</th>
+<th data-quarto-table-cell-role="th">z</th>
+<th data-quarto-table-cell-role="th">P&gt;|z|</th>
+<th data-quarto-table-cell-role="th">[0.025</th>
+<th data-quarto-table-cell-role="th">0.975]</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">const</th>
+<td>0.3122</td>
+<td>0.372</td>
+<td>0.839</td>
+<td>0.401</td>
+<td>-0.417</td>
+<td>1.041</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">livslängd</th>
+<td>0.0011</td>
+<td>0.007</td>
+<td>0.174</td>
+<td>0.862</td>
+<td>-0.012</td>
+<td>0.014</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">suicid/100k</th>
+<td>0.0022</td>
+<td>0.004</td>
+<td>0.534</td>
+<td>0.594</td>
+<td>-0.006</td>
+<td>0.010</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">fetma_andel</th>
+<td>0.0023</td>
+<td>0.002</td>
+<td>0.939</td>
+<td>0.348</td>
+<td>-0.003</td>
+<td>0.007</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">hdi</th>
+<td>-0.0345</td>
+<td>0.780</td>
+<td>-0.044</td>
+<td>0.965</td>
+<td>-1.562</td>
+<td>1.493</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">co2_percapita</th>
+<td>-0.0178</td>
+<td>0.009</td>
+<td>-1.998</td>
+<td>0.046</td>
+<td>-0.035</td>
+<td>-0.000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">energi_percapita</th>
+<td>-1.363e-06</td>
+<td>1.27e-06</td>
+<td>-1.071</td>
+<td>0.284</td>
+<td>-3.86e-06</td>
+<td>1.13e-06</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">utbildning_andel_gdp</th>
+<td>0.0026</td>
+<td>0.010</td>
+<td>0.264</td>
+<td>0.792</td>
+<td>-0.017</td>
+<td>0.022</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">andel_kvinnor_arbete</th>
+<td>0.0006</td>
+<td>0.001</td>
+<td>0.520</td>
+<td>0.603</td>
+<td>-0.002</td>
+<td>0.003</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">skolår</th>
+<td>0.0010</td>
+<td>0.016</td>
+<td>0.061</td>
+<td>0.952</td>
+<td>-0.031</td>
+<td>0.033</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">skatt_andel_bnp</th>
+<td>-0.0005</td>
+<td>0.002</td>
+<td>-0.204</td>
+<td>0.838</td>
+<td>-0.005</td>
+<td>0.004</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">statligautgifter_andel_bnp</th>
+<td>0.0030</td>
+<td>0.002</td>
+<td>1.217</td>
+<td>0.224</td>
+<td>-0.002</td>
+<td>0.008</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">gdp_per_capita</th>
+<td>9.708e-07</td>
+<td>2.21e-06</td>
+<td>0.439</td>
+<td>0.660</td>
+<td>-3.36e-06</td>
+<td>5.3e-06</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">handel_andel_gdp</th>
+<td>-0.0004</td>
+<td>0.000</td>
+<td>-0.869</td>
+<td>0.385</td>
+<td>-0.001</td>
+<td>0.000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">livstillfredsställelse</th>
+<td>0.0630</td>
+<td>0.024</td>
+<td>2.678</td>
+<td>0.007</td>
+<td>0.017</td>
+<td>0.109</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">barn_per_kvinna</th>
+<td>-0.0215</td>
+<td>0.024</td>
+<td>-0.895</td>
+<td>0.371</td>
+<td>-0.069</td>
+<td>0.026</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">korruption_index</th>
+<td>-0.4792</td>
+<td>0.079</td>
+<td>-6.075</td>
+<td>0.000</td>
+<td>-0.634</td>
+<td>-0.325</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">mord_percapita</th>
+<td>2.333e-05</td>
+<td>0.001</td>
+<td>0.016</td>
+<td>0.987</td>
+<td>-0.003</td>
+<td>0.003</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">död_i_konflikt_percapita</th>
+<td>-6.986e-07</td>
+<td>4.21e-06</td>
+<td>-0.166</td>
+<td>0.868</td>
+<td>-8.94e-06</td>
+<td>7.55e-06</td>
+</tr>
+</tbody>
+</table>
+
+
+<table class="simpletable caption-top table table-sm table-striped small">
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Omnibus:</th>
+<td>11.081</td>
+<th data-quarto-table-cell-role="th">Durbin-Watson:</th>
+<td>1.859</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Prob(Omnibus):</th>
+<td>0.004</td>
+<th data-quarto-table-cell-role="th">Jarque-Bera (JB):</th>
+<td>11.761</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Skew:</th>
+<td>-0.598</td>
+<th data-quarto-table-cell-role="th">Prob(JB):</th>
+<td>0.00279</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Kurtosis:</th>
+<td>3.813</td>
+<th data-quarto-table-cell-role="th">Cond. No.</th>
+<td>2.34e+06</td>
+</tr>
+</tbody>
+</table>
+<br><br>Notes:<br>[1] Standard Errors are heteroscedasticity robust (HC3)<br>[2] The condition number is large, 2.34e+06. This might indicate that there are<br>strong multicollinearity or other numerical problems.
 </div>
+</div>
+</section>
+<section id="kontroll-av-multikollinearitet" class="level1">
+<h1>Kontroll av multikollinearitet</h1>
+<p>För att kunna besvara frågeställningen genomfördes en VIF-analys för att identifiera eventuella variabler som överlappar med varandra.</p>
+<div id="2701d862" class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>vif_initial</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">variable</th>
+<th data-quarto-table-cell-role="th">VIF</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>hdi</td>
+<td>57.640548</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>livslängd</td>
+<td>14.243929</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">9</th>
+<td>skolår</td>
+<td>11.494334</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">12</th>
+<td>gdp_per_capita</td>
+<td>8.855024</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">15</th>
+<td>barn_per_kvinna</td>
+<td>5.460668</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">6</th>
+<td>energi_percapita</td>
+<td>5.177395</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">5</th>
+<td>co2_percapita</td>
+<td>4.233433</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">10</th>
+<td>skatt_andel_bnp</td>
+<td>4.132875</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">11</th>
+<td>statligautgifter_andel_bnp</td>
+<td>3.594037</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">16</th>
+<td>korruption_index</td>
+<td>3.389612</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">14</th>
+<td>livstillfredsställelse</td>
+<td>3.149172</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>fetma_andel</td>
+<td>2.791518</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>andel_kvinnor_arbete</td>
+<td>1.977248</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">2</th>
+<td>suicid/100k</td>
+<td>1.768741</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">7</th>
+<td>utbildning_andel_gdp</td>
+<td>1.725288</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">17</th>
+<td>mord_percapita</td>
+<td>1.562660</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">13</th>
+<td>handel_andel_gdp</td>
+<td>1.434958</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">18</th>
+<td>död_i_konflikt_percapita</td>
+<td>1.085799</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>I analysen framkom att HDI hade hög multikollinearitet, vilket är rimligt då det är ett sammansatt mått för bland annat utbildning, hälsa och inkomst - variabler som också finns med i modellen. Därför exkluderades HDI från modellen.</p>
+<p>Vid ny VIF var samtliga resterande variabler under 10, vilket är ett vanligt cut-off-värde vid VIF-analyser.</p>
+<div id="022cb8ef" class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>vif_after_hdi</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">variable</th>
+<th data-quarto-table-cell-role="th">VIF</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">1</th>
+<td>livslängd</td>
+<td>7.528331</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">11</th>
+<td>gdp_per_capita</td>
+<td>7.404014</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">5</th>
+<td>energi_percapita</td>
+<td>5.156669</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">8</th>
+<td>skolår</td>
+<td>4.717647</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>co2_percapita</td>
+<td>4.223140</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">14</th>
+<td>barn_per_kvinna</td>
+<td>4.204239</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">9</th>
+<td>skatt_andel_bnp</td>
+<td>3.928854</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">10</th>
+<td>statligautgifter_andel_bnp</td>
+<td>3.572159</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">15</th>
+<td>korruption_index</td>
+<td>3.380260</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">13</th>
+<td>livstillfredsställelse</td>
+<td>3.102337</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">3</th>
+<td>fetma_andel</td>
+<td>2.491351</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>andel_kvinnor_arbete</td>
+<td>1.938464</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>suicid/100k</td>
+<td>1.767178</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">6</th>
+<td>utbildning_andel_gdp</td>
+<td>1.721572</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">16</th>
+<td>mord_percapita</td>
+<td>1.465117</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">12</th>
+<td>handel_andel_gdp</td>
+<td>1.406298</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">17</th>
+<td>död_i_konflikt_percapita</td>
+<td>1.080879</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="reducering-av-variabler" class="level1">
+<h1>Reducering av variabler</h1>
+<p>En efter en reducerades variabler som inte uppnådde statistisk signifikans i modellen, vilket ledde till att dessa variabler exkluderades slutligen: - “mord_percapita”, - “död_i_konflikt_percapita”, - “skolår”, - “livslängd”, - “utbildning_andel_gdp”, - “suicid/100k”, - “skatt_andel_bnp”, - “gdp_per_capita”, - “andel_kvinnor_arbete”, - “handel_andel_gdp”, - “fetma_andel”, - “energi_percapita”</p>
+<p>Den slutliga modellen innehöll endast statistiskt signifikanta variabler.</p>
 </section>
 <section id="slutlig-modell" class="level1">
 <h1>Slutlig modell</h1>
-<p>Den slutliga modellen innehöll endast statistiskt signifikanta variabler.</p>
-<div id="8b7aae88" class="cell" data-execution_count="2">
+<p>Den slutliga modellen innehöll fem variabler som är associerade med demokratiindex när andra variabler hålls konstanta:</p>
+<div id="0fafca30" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># regression summary / tabell</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>model_final.summary()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<table class="simpletable caption-top table table-sm table-striped small">
+<caption>OLS Regression Results</caption>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Dep. Variable:</th>
+<td>demokratiindex</td>
+<th data-quarto-table-cell-role="th">R-squared:</th>
+<td>0.683</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Model:</th>
+<td>OLS</td>
+<th data-quarto-table-cell-role="th">Adj. R-squared:</th>
+<td>0.670</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Method:</th>
+<td>Least Squares</td>
+<th data-quarto-table-cell-role="th">F-statistic:</th>
+<td>95.29</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Date:</th>
+<td>Thu, 09 Jul 2026</td>
+<th data-quarto-table-cell-role="th">Prob (F-statistic):</th>
+<td>1.38e-41</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Time:</th>
+<td>09:24:11</td>
+<th data-quarto-table-cell-role="th">Log-Likelihood:</th>
+<td>74.224</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">No. Observations:</th>
+<td>135</td>
+<th data-quarto-table-cell-role="th">AIC:</th>
+<td>-136.4</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Df Residuals:</th>
+<td>129</td>
+<th data-quarto-table-cell-role="th">BIC:</th>
+<td>-119.0</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Df Model:</th>
+<td>5</td>
+<th data-quarto-table-cell-role="th"></th>
+<td></td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Covariance Type:</th>
+<td>HC3</td>
+<th data-quarto-table-cell-role="th"></th>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+
+<table class="simpletable caption-top table table-sm table-striped small">
+<tbody>
+<tr class="odd">
+<td></td>
+<th data-quarto-table-cell-role="th">coef</th>
+<th data-quarto-table-cell-role="th">std err</th>
+<th data-quarto-table-cell-role="th">z</th>
+<th data-quarto-table-cell-role="th">P&gt;|z|</th>
+<th data-quarto-table-cell-role="th">[0.025</th>
+<th data-quarto-table-cell-role="th">0.975]</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">const</th>
+<td>0.4405</td>
+<td>0.150</td>
+<td>2.946</td>
+<td>0.003</td>
+<td>0.147</td>
+<td>0.734</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">co2_percapita</th>
+<td>-0.0226</td>
+<td>0.004</td>
+<td>-5.413</td>
+<td>0.000</td>
+<td>-0.031</td>
+<td>-0.014</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">statligautgifter_andel_bnp</th>
+<td>0.0038</td>
+<td>0.002</td>
+<td>2.317</td>
+<td>0.021</td>
+<td>0.001</td>
+<td>0.007</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">livstillfredsställelse</th>
+<td>0.0635</td>
+<td>0.017</td>
+<td>3.688</td>
+<td>0.000</td>
+<td>0.030</td>
+<td>0.097</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">barn_per_kvinna</th>
+<td>-0.0242</td>
+<td>0.012</td>
+<td>-2.009</td>
+<td>0.045</td>
+<td>-0.048</td>
+<td>-0.001</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">korruption_index</th>
+<td>-0.4749</td>
+<td>0.063</td>
+<td>-7.519</td>
+<td>0.000</td>
+<td>-0.599</td>
+<td>-0.351</td>
+</tr>
+</tbody>
+</table>
+
+
+<table class="simpletable caption-top table table-sm table-striped small">
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Omnibus:</th>
+<td>9.019</td>
+<th data-quarto-table-cell-role="th">Durbin-Watson:</th>
+<td>1.877</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Prob(Omnibus):</th>
+<td>0.011</td>
+<th data-quarto-table-cell-role="th">Jarque-Bera (JB):</th>
+<td>8.974</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">Skew:</th>
+<td>-0.548</td>
+<th data-quarto-table-cell-role="th">Prob(JB):</th>
+<td>0.0113</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Kurtosis:</th>
+<td>3.627</td>
+<th data-quarto-table-cell-role="th">Cond. No.</th>
+<td>373.</td>
+</tr>
+</tbody>
+</table>
+<br><br>Notes:<br>[1] Standard Errors are heteroscedasticity robust (HC3)
+</div>
 </div>
 </section>
 <section id="resultat" class="level1">
 <h1>Resultat</h1>
 <p>De starkaste associationerna med demokratiindex observerades för:</p>
 <ul>
-<li>korruption</li>
-<li>livstillfredsställelse</li>
-<li>fertilitet</li>
-<li>CO₂-utsläpp</li>
-<li>statliga utgifter</li>
+<li>korruption (negativ association)</li>
+<li>livstillfredsställelse (positiv association)</li>
+<li>fertilitet (negativ association)</li>
+<li>CO₂-utsläpp per capita (positiv association)</li>
+<li>statliga utgifter som andel av BNP (positiv association)</li>
 </ul>
 
 

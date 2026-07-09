@@ -4,13 +4,22 @@ title: "Multipel regression"
 
 # Frågeställning
 
-Vilka samhällsfaktorer är associerade med demokratiindex 
-när andra faktorer hålls konstanta?
+Vilka samhällsfaktorer är associerade med demokratiindex när andra faktorer hålls konstanta?
 
+```{python}
+from scripts.regression import (
+model_data,
+calculate_vif,
+model_initial,
+vif_initial,
+vif_after_hdi,
+model_final,
+vif_final,
+regression_results
+)
+```
 
 # Modellstrategi
-
-Den initiala modellen inkluderade ett större antal indikatorer.
 
 Processen bestod av:
 
@@ -20,25 +29,58 @@ Processen bestod av:
 4. Kontroll av multikollinearitet
 5. Successiv reducering
 
+# Deskriptiv modell
 
-# Multikollinearitet
-
-HDI exkluderades efter VIF-analys då variabeln hade stark konceptuell 
-överlappning med exempelvis utbildning och hälsa.
-
+I en första deskriptiv modell inkluderades samtliga variabler för att undersöka vilka variabler som hade positiva respektive negativa samband med demokratiindex.
 
 ```{python}
-# VIF-tabell
+model_initial.summary()
 ```
 
 
-# Slutlig modell
+
+# Kontroll av multikollinearitet
+
+För att kunna besvara frågeställningen genomfördes en VIF-analys för att identifiera eventuella variabler som överlappar med varandra.
+
+```{python}
+vif_initial
+```
+
+I analysen framkom att HDI hade hög multikollinearitet, vilket är rimligt då det är ett sammansatt mått för bland annat utbildning, hälsa och inkomst - variabler som också finns med i modellen. Därför exkluderades HDI från modellen.
+
+Vid ny VIF var samtliga resterande variabler under 10, vilket är ett vanligt cut-off-värde vid VIF-analyser.
+
+```{python}
+vif_after_hdi
+```
+
+
+# Reducering av variabler
+
+En efter en reducerades variabler som inte uppnådde statistisk signifikans i modellen, vilket ledde till att dessa variabler exkluderades slutligen:
+
+- "mord_percapita",
+- "död_i_konflikt_percapita",
+- "skolår",
+- "livslängd",
+- "utbildning_andel_gdp",
+- "suicid/100k",
+- "skatt_andel_bnp",
+- "gdp_per_capita",
+- "andel_kvinnor_arbete",
+- "handel_andel_gdp",
+- "fetma_andel",
+- "energi_percapita"
 
 Den slutliga modellen innehöll endast statistiskt signifikanta variabler.
 
+# Slutlig modell
+
+Den slutliga modellen innehöll fem variabler som är associerade med demokratiindex när andra variabler hålls konstanta:
 
 ```{python}
-# regression summary / tabell
+model_final.summary()
 ```
 
 
@@ -46,8 +88,8 @@ Den slutliga modellen innehöll endast statistiskt signifikanta variabler.
 
 De starkaste associationerna med demokratiindex observerades för:
 
-- korruption
-- livstillfredsställelse
-- fertilitet
-- CO₂-utsläpp
-- statliga utgifter
+- korruption (negativ association)
+- livstillfredsställelse (positiv association)
+- fertilitet (negativ association)
+- CO₂-utsläpp per capita (positiv association)
+- statliga utgifter som andel av BNP (positiv association)

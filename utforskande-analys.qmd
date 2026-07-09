@@ -1,5 +1,5 @@
 ---
-title: "Utforskande analys"
+title: "Explorativ analys"
 ---
 
 # Datainsamling och bearbetning
@@ -43,26 +43,24 @@ Korrelationsanalysen användes inte för att dra kausala slutsatser, utan som et
 create_corrplot(corr_data)
 ```
 
-## Identifierade samband
+Det finns många samband som hade kunnat undersökas vidare, men i detta projekt analyserades 
 
-Några samband som undersöktes vidare:
-
-- Gini-koefficienten uppvisade ett negativt samband med lönegapet.
+- Gini-koefficienten (ett mått på ekonomisk ojämlikhet, där en högre siffra innebär högre ojämlikhet) uppvisade ett negativt samband med lönegap mellan könen.
 - Gini-koefficienten uppvisade även ett negativt samband med BNP per capita.
-- Sambandet mellan ekonomisk utveckling, ojämlikhet och könsskillnader i lön undersöktes därför vidare genom separata visualiseringar.
+- Samtidigt noterades ett positivt samband mellan BNP per capita och lönegap mellan könen.
 
 
-# Samband mellan Gini-koefficient och lönegap
+# Explorativ analys via datavisualisering
 
-Ett första steg var att undersöka om ekonomisk ojämlikhet totalt sett hänger samman med könsskillnader i löner.
+Ovanstående samband väckte en fråga: Hur kommer det sig att både större ekonomisk jämlikhet (lägre gini-koefficient) och större GDP per capita är associerat med ett större lönegap mellan könen, samtidigt som ett högre BNP per capita är associerat med större ekonomisk jämlikhet?
+
+Ett första steg var att visualisera hur det kommer sig att ekonomisk ojämlikhet totalt sett hänger samman med könsskillnader i löner.
 
 ```{python}
 plot_gini_vs_lönegap(lönegap_gini)
 ```
 
 Diagrammet visar en tydlig negativ trend där högre Gini-koefficient tenderar att sammanfalla med mindre löneskillnader mellan kvinnor och män enligt detta mått.
-
-Detta innebär dock inte nödvändigtvis att ökad ekonomisk ojämlikhet leder till minskade könsskillnader i lön. En möjlig förklaring är att länder med lägre inkomster ofta har lägre kvinnligt arbetskraftsdeltagande, där endast högutbildade kvinnor deltar på arbetsmarknaden.
 
 
 # Samband mellan BNP per capita och Gini-koefficient
@@ -85,5 +83,7 @@ plot_gdp_vs_lönegap(lönegap_gdp)
 ```
 
 Resultatet visar att lönegapet inte följer en linjär utvecklingskurva. De största lönegapen återfinns framför allt bland låg- och medelinkomstländer, medan många höginkomstländer ligger närmare noll.
+
+# Reflektion kring resultaten
 
 Ett möjligt resonemang är att kvinnors deltagande på arbetsmarknaden förändras med ekonomisk utveckling. I tidiga utvecklingsstadier kan arbetsmarknaden vara selektiv, där framför allt kvinnor med hög utbildning och hög socioekonomisk status deltar. När fler kvinnor deltar på arbetsmarknaden förändras även sammansättningen av gruppen kvinnliga arbetstagare.
