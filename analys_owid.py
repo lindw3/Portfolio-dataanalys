@@ -126,11 +126,6 @@ livstillfredsställelse = pd.read_csv("https://ourworldindata.org/grapher/happin
 livstillfredsställelse.columns = ['land', 'kod', 'år', 'livstillfredsställelse']
 livstillfredsställelse = livstillfredsställelse[['land', 'år', 'livstillfredsställelse']]
 
-    # Enpersonshushåll
-hushåll = pd.read_csv("https://ourworldindata.org/grapher/one-person-households.csv?v=1&csvType=full&useColumnShortNames=true", storage_options = {'User-Agent': 'Our World In Data data fetch/1.0'})
-hushåll.columns = ['land', 'kod', 'år', 'hushåll_andel']
-hushåll = hushåll[['land', 'år', 'hushåll_andel']]
-
     # Barn per kvinna
 barn = pd.read_csv("https://ourworldindata.org/grapher/children-born-per-woman.csv?v=1&csvType=full&useColumnShortNames=true", storage_options = {'User-Agent': 'Our World In Data data fetch/1.0'})
 barn.columns = ['land', 'kod', 'år', 'barn_per_kvinna']
@@ -181,7 +176,6 @@ dataramar = [
     gdp,
     handel,
     livstillfredsställelse,
-    hushåll,
     barn,
     korruption,
     mord,
@@ -299,9 +293,9 @@ zero_line = (
 fig = (
     (zero_line + points)
     .properties(
-        width=850,
-        height=350
-    )
+            width="container",
+            height=350
+            )
     .configure_view(
         stroke=None
     )
@@ -361,9 +355,9 @@ points = (
 fig = (
     points
     .properties(
-        width=850,
-        height=350
-    )
+            width="container",
+            height=350
+            )
     .configure_view(
         stroke=None
     )
@@ -431,9 +425,9 @@ zero_line = (
 fig = (
     (zero_line + points)
     .properties(
-        width=850,
-        height=350
-    )
+            width="container",
+            height=350
+            )
     .configure_view(
         stroke=None
     )

@@ -4,7 +4,7 @@ title: "Multipel regression"
 
 # Frågeställning
 
-Vilka samhällsfaktorer är associerade med demokratiindex när andra faktorer hålls konstanta?
+Vilka samhällsfaktorer är associerade med demokratiindex?
 
 ```{python}
 from scripts.regression import (
@@ -15,80 +15,87 @@ vif_initial,
 vif_after_hdi,
 model_final,
 vif_final,
-regression_results
+regression_results,
+coef_table_initial,
+model_info_initial,
+coef_table_final,
+model_info_final
 )
 ```
 
-# Modellstrategi
+# Dataset
 
-Processen bestod av:
+Jag kombinerade 24 dataset från [Our World in Data](https://ourworldindata.org/) för att skapa en gemensam databas över samhällsindikatorer på internationell nivå från ca. 400 länder. Dataseten innehåller indikatorer inom flera områden, såsom hälsa, ekonomi, jämställdhet, sociala faktorer och institutionella faktorer.
 
-1. Standardisering av prediktorer
-2. OLS-regression
-3. Robust standardfel (HC3)
-4. Kontroll av multikollinearitet
-5. Successiv reducering
+Analyserna är gjorda för 2021, då detta år var det år där flest länder hade tillgängliga data för de variabler som analyserades (totalt 343 länder).
 
-# Deskriptiv modell
+# Databearbetning
+
+Först exkluderades en variabel som helt saknade data för det givna året. Därefter exkluderades samtliga länder som saknade data för 25+ procent av de variabler som återstod, vilket innebar att 135 länder återstod i analysen. Sedan exkluderades fyra ytterligare variabler som saknade data för 25+ procent av de länder som återstod. För att samtliga variabler skulle kunna användas i regressionsmodellen genomfördes sedan en imputering av resterande saknade värden, där saknade värden tillgavs medianvärdet för respektive variabel. Slutligen standardiserades alla responsvariabler då de skilde sig åt i storleken på värden, där vissa värden var mellan 0-1 och andra uppgick till tiotals tusen.
+
+# Dataanalys
+
+## Deskriptiv modell
 
 I en första deskriptiv modell inkluderades samtliga variabler för att undersöka vilka variabler som hade positiva respektive negativa samband med demokratiindex.
 
 ```{python}
-model_initial.summary()
+coef_table_initial
 ```
 
 
 
-# Kontroll av multikollinearitet
+## Kontroll av multikollinearitet
 
-För att kunna besvara frågeställningen genomfördes en VIF-analys för att identifiera eventuella variabler som överlappar med varandra.
+För att kunna besvara frågeställningen genomfördes först en VIF-analys för att identifiera variabler som har en hög korrelation med andra variabler.
 
 ```{python}
 vif_initial
 ```
 
-I analysen framkom att HDI hade hög multikollinearitet, vilket är rimligt då det är ett sammansatt mått för bland annat utbildning, hälsa och inkomst - variabler som också finns med i modellen. Därför exkluderades HDI från modellen.
+I analysen framkom att Human Development Index (HDI) hade hög multikollinearitet, vilket är rimligt då det är ett sammansatt mått för bland annat utbildning, hälsa och inkomst - variabler som också finns med i modellen. Därför exkluderades HDI från modellen.
 
-Vid ny VIF var samtliga resterande variabler under 10, vilket är ett vanligt cut-off-värde vid VIF-analyser.
+Vid en ny VIF-analys fick samtliga resterande variabler en faktor under 10, vilket ofta ses som ett tillfredsställande värde vid VIF-analyser.
 
 ```{python}
 vif_after_hdi
 ```
 
 
-# Reducering av variabler
+## Reducering av variabler
 
-En efter en reducerades variabler som inte uppnådde statistisk signifikans i modellen, vilket ledde till att dessa variabler exkluderades slutligen:
+En efter en exkluderades variabler som inte uppnådde statistisk signifikans i modellen, vilket ledde till att dessa variabler exkluderades från modellen slutligen:
 
-- "mord_percapita",
-- "död_i_konflikt_percapita",
-- "skolår",
-- "livslängd",
-- "utbildning_andel_gdp",
-- "suicid/100k",
-- "skatt_andel_bnp",
-- "gdp_per_capita",
-- "andel_kvinnor_arbete",
-- "handel_andel_gdp",
-- "fetma_andel",
-- "energi_percapita"
+- Mord per capita
+- Död i konflikt per capita
+- Genomsnittliga skolår per person
+- Medellivslängd
+- Utbildningskostnader som andel av GDP
+- Suicid per 100,000 invånare
+- Skatt som andel av BNP
+- GDP per capita
+- Andel kvinnor i arbete i förhållande till män
+- Handel som andel av GDP
+- Andel personer med fetma i populationen
+- Energianvändning per capita
 
-Den slutliga modellen innehöll endast statistiskt signifikanta variabler.
+Den slutliga modellen innehöll därmed endast variabler som uppnådde statistisk signifikans.
 
-# Slutlig modell
+## Slutlig modell
 
 Den slutliga modellen innehöll fem variabler som är associerade med demokratiindex när andra variabler hålls konstanta:
 
 ```{python}
-model_final.summary()
+model_info_final
+coef_table_final
 ```
 
 
 # Resultat
 
-De starkaste associationerna med demokratiindex observerades för:
+Nedanstående variabler är associerade med demokratiindex när andra variabler hålls konstanta, och är sorterade utifrån hur starkt associerade de är med demokratiindex:
 
-- korruption (negativ association)
+- korruptionsindex (negativ association)
 - livstillfredsställelse (positiv association)
 - fertilitet (negativ association)
 - CO₂-utsläpp per capita (positiv association)

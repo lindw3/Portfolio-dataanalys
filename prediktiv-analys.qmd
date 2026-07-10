@@ -5,6 +5,7 @@ title: "Explorativ analys"
 # Frågeställning
 
 ```{python}
+import pandas as pd
 
 demokrati = pd.read_csv("https://ourworldindata.org/explorers/democracy.csv?v=1&csvType=full&useColumnShortNames=true&Dataset=Regimes+of+the+World&Metric=%C2%ADPolitical+regime&Sub-metric=Main+classification", storage_options = {'User-Agent': 'Our World In Data data fetch/1.0'})
 demokrati.columns = ['land', 'kod', 'år', 'demokrati']
@@ -13,8 +14,6 @@ demokrati = demokrati[demokrati["år"] == 2021]
 
 # Gör om demokrati till en binär variabel. 2-3 = demokrati och 0-1 = autokrati.
 demokrati["demokrati"] = (demokrati["demokrati"] >= 2).astype(int)
-
-
 
 
 ```

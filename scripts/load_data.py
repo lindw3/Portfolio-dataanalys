@@ -286,22 +286,6 @@ def load_data():
     datasets.append(livstillfredsställelse)
 
 
-    # Enpersonshushåll
-    hushåll = pd.read_csv(
-        "https://ourworldindata.org/grapher/one-person-households.csv?v=1&csvType=full&useColumnShortNames=true",
-        **OWID_HEADERS
-    )
-    hushåll.columns = [
-        "land",
-        "kod",
-        "år",
-        "hushåll_andel"
-    ]
-    hushåll = hushåll[
-        ["land", "år", "hushåll_andel"]
-    ]
-    datasets.append(hushåll)
-
 
     # Barn per kvinna
     barn = pd.read_csv(
@@ -320,7 +304,7 @@ def load_data():
     datasets.append(barn)
 
 
-    # Korruption
+    # Korruptionsindex
     korruption = pd.read_csv(
         "https://ourworldindata.org/grapher/political-corruption-index.csv?v=1&csvType=full&useColumnShortNames=true",
         **OWID_HEADERS

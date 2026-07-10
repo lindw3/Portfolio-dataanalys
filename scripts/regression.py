@@ -1,8 +1,8 @@
 import pandas as pd
-
 from sklearn.impute import SimpleImputer
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 import statsmodels.api as sm
+from sklearn.preprocessing import StandardScaler
 
 
 # --------------------------------------------------
@@ -44,25 +44,19 @@ model_data = model_data.dropna(
 
 # Undersöker andelen saknade värden per observation.
 # Länder med mycket begränsad datatäckning exkluderas.
-missing_share = model_data.isna().mean(axis=1)
-
+missing_share_rows = model_data.isna().mean(axis=1)
 
 model_data = model_data[
-    missing_share <= 0.25
+    missing_share_rows <= 0.25
 ]
 
-
-# Dessa indikatorer exkluderas manuellt
-# Lönegap och Gini analyseras separat i den explorativa delen.
-# Sjukvård och bistånd har för låg täckning.
-model_data = model_data.drop(
-    columns=[
-        "sjukvård_andel_gdp",
-        "gini",
-        "lönegap",
-        "bistånd_andel_bni"
-    ]
+# Tar bort variabler med 25 % eller mer saknade värden.
+model_data = model_data.dropna(
+    axis=1,
+    thresh=len(model_data) * 0.75
 )
+
+
 
 
 # Ersätter resterande saknade värden med medianen.
@@ -127,6 +121,17 @@ X = model_data.drop(
     ]
 )
 
+    # Standardisera X-variablerna
+scaler = StandardScaler()
+
+X_scaled = pd.DataFrame(
+    scaler.fit_transform(X),
+    columns=X.columns,
+    index=X.index
+)
+
+X = X_scaled
+
 
 X = sm.add_constant(X)
 
@@ -139,9 +144,35 @@ model_initial = sm.OLS(
 )
 
 
-print(
-    model_initial.summary()
+  # Skapa egna tabeller med relevanta variabler
+model_info_initial = pd.DataFrame({
+    "Oberoende variabel": [model_initial.model.endog_names],
+    "Antal observationer": [int(model_initial.nobs)],
+    "R-squared": [model_initial.rsquared],
+    "Adj. R-squared": [model_initial.rsquared_adj],
+    "F-statistic": [model_initial.fvalue],
+    "Prob (F-statistic)": [model_initial.f_pvalue],
+    "AIC": [model_initial.aic],
+    "BIC": [model_initial.bic]
+})
+
+model_info_initial = model_info_initial.round(3)
+
+
+coef_table_initial = pd.DataFrame({
+    "Koefficient": model_initial.params,
+    "Standardfel": model_initial.bse,
+    "z": model_initial.tvalues,
+    "P>|z|": model_initial.pvalues,
+    "[0.025": model_initial.conf_int()[0],
+    "0.975]": model_initial.conf_int()[1]
+})
+
+coef_table_initial = coef_table_initial.round(3)
+coef_table_initial = coef_table_initial.drop(
+    index="const"
 )
+
 
 
 
@@ -153,7 +184,6 @@ vif_initial = calculate_vif(
     X
 )
 
-print(vif_initial)
 
 
 
@@ -172,7 +202,6 @@ vif_after_hdi = calculate_vif(
     X
 )
 
-print(vif_after_hdi)
 
 
 
@@ -211,10 +240,34 @@ model_final = sm.OLS(
     cov_type="HC3"
 )
 
+  # Skapa egna tabeller med relevanta variabler
+coef_table_final = pd.DataFrame({
+    "Koefficient": model_final.params,
+    "Standardfel": model_final.bse,
+    "z": model_final.tvalues,
+    "P>|z|": model_final.pvalues,
+    "[0.025": model_final.conf_int()[0],
+    "0.975]": model_final.conf_int()[1]
+})
 
-print(
-    model_final.summary()
+coef_table_final = coef_table_final.round(3)
+coef_table_final = coef_table_final.drop(
+    index="const"
 )
+
+
+model_info_final = pd.DataFrame({
+    "Oberoende variabel": [model_final.model.endog_names],
+    "Antal observationer": [int(model_final.nobs)],
+    "R-squared": [model_final.rsquared],
+    "Adj. R-squared": [model_final.rsquared_adj],
+    "F-statistic": [model_final.fvalue],
+    "Prob (F-statistic)": [model_final.f_pvalue],
+    "AIC": [model_final.aic],
+    "BIC": [model_final.bic]
+})
+
+model_info_final = model_info_final.round(3)
 
 
 
@@ -226,7 +279,6 @@ vif_final = calculate_vif(
     X_reduced
 )
 
-print(vif_final)
 
     # Betydligt bättre VIF-värden, vilket indikerar att variablerna är relativt oberoende av varandra.
 
@@ -242,8 +294,6 @@ regression_results = {
     "vif_initial": vif_initial,
     "vif_final": vif_final
 }
-
-    # "En initial modell inkluderade ett större antal samhällsindikatorer och användes deskriptivt för att identifiera potentiella samband. Därefter reducerades modellen genom att exkludera variabler utan statistiskt stöd samt indikatorer med stark konceptuell överlappning. Den reducerade modellen används för att identifiera variabler som uppvisar samband med demokratiindex när övriga inkluderade faktorer hålls konstanta."
 
     # Starkast association med demokratiindex, i ordning: Korruptionsindex (negativ korrelation), livstillfredsställelse, barn per kvinna, co2-utsläpp per capita, statliga utgifter som andel av BNP.
 

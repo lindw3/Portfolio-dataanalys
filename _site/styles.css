@@ -1,0 +1,15 @@
+.vega-embed {
+    width: 100% !important;
+    max-width: 100%;
+}
+
+.vega-embed canvas,
+.vega-embed svg {
+    max-width: 100%;
+    height: auto !important;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}

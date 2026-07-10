@@ -9,11 +9,11 @@ website:
       - href: index.qmd
         text: Hem
 
-      - href: utforskande-analys.qmd
-        text: Utforskande analys
+      - href: explorativ-analys.qmd
+        text: Explorativ analys
 
       - href: multipel-regression.qmd
-        text: Multipel regression
+        text: Multipel regressionsanalys
 
       - href: prediktiv-analys.qmd
         text: Prediktiv analys
@@ -22,8 +22,10 @@ format:
   html:
     theme: cosmo
     toc: true
-    code-fold: true
-    fig-width: 10
-    fig-height: 5
+    code-fold: false
+    css: styles.css
+
+execute:
+  echo: false
 
 jupyter: python3
