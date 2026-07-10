@@ -109,6 +109,6 @@
     "href": "multipel-regression.html#slutlig-modell",
     "title": "Multipel regression",
     "section": "Slutlig modell",
-    "text": "Slutlig modell\nDen slutliga modellen innehöll fem variabler som är associerade med demokratiindex när andra variabler hålls konstanta:\n\n\n\n\n\n\n\n\n\nKoefficient\nStandardfel\nz\nP&gt;|z|\n[0.025\n0.975]\n\n\n\n\nco2_percapita\n-0.105\n0.019\n-5.413\n0.000\n-0.143\n-0.067\n\n\nstatligautgifter_andel_bnp\n0.042\n0.018\n2.317\n0.021\n0.007\n0.078\n\n\nlivstillfredsställelse\n0.066\n0.018\n3.688\n0.000\n0.031\n0.102\n\n\nbarn_per_kvinna\n-0.031\n0.015\n-2.009\n0.045\n-0.061\n-0.001\n\n\nkorruption_index\n-0.143\n0.019\n-7.519\n0.000\n-0.180\n-0.106"
+    "text": "Slutlig modell\nDen slutliga modellen innehöll fem variabler som är associerade med demokratiindex när andra variabler hålls konstanta:\n\n\n\n\n\n\n\n\n\nOberoende variabel\nAntal observationer\nR-squared\nAdj. R-squared\nF-statistic\nProb (F-statistic)\nAIC\nBIC\n\n\n\n\n0\ndemokratiindex\n135\n0.683\n0.67\n95.29\n0.0\n-136.448\n-119.017\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nKoefficient\nStandardfel\nz\nP&gt;|z|\n[0.025\n0.975]\n\n\n\n\nco2_percapita\n-0.105\n0.019\n-5.413\n0.000\n-0.143\n-0.067\n\n\nstatligautgifter_andel_bnp\n0.042\n0.018\n2.317\n0.021\n0.007\n0.078\n\n\nlivstillfredsställelse\n0.066\n0.018\n3.688\n0.000\n0.031\n0.102\n\n\nbarn_per_kvinna\n-0.031\n0.015\n-2.009\n0.045\n-0.061\n-0.001\n\n\nkorruption_index\n-0.143\n0.019\n-7.519\n0.000\n-0.180\n-0.106"
   }
 ]

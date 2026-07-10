@@ -181,7 +181,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="deskriptiv-modell" class="level2">
 <h2 class="anchored" data-anchor-id="deskriptiv-modell">Deskriptiv modell</h2>
 <p>I en första deskriptiv modell inkluderades samtliga variabler för att undersöka vilka variabler som hade positiva respektive negativa samband med demokratiindex.</p>
-<div id="7f562226" class="cell" data-execution_count="2">
+<div id="3d99a1b0" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -371,7 +371,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="kontroll-av-multikollinearitet" class="level2">
 <h2 class="anchored" data-anchor-id="kontroll-av-multikollinearitet">Kontroll av multikollinearitet</h2>
 <p>För att kunna besvara frågeställningen genomfördes först en VIF-analys för att identifiera variabler som har en hög korrelation med andra variabler.</p>
-<div id="92b14ab8" class="cell" data-execution_count="3">
+<div id="c6faaebb" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
@@ -483,7 +483,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>I analysen framkom att Human Development Index (HDI) hade hög multikollinearitet, vilket är rimligt då det är ett sammansatt mått för bland annat utbildning, hälsa och inkomst - variabler som också finns med i modellen. Därför exkluderades HDI från modellen.</p>
 <p>Vid en ny VIF-analys fick samtliga resterande variabler en faktor under 10, vilket ofta ses som ett tillfredsställande värde vid VIF-analyser.</p>
-<div id="30278f79" class="cell" data-execution_count="4">
+<div id="5519c103" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 
@@ -611,8 +611,45 @@ ul.task-list li input[type="checkbox"] {
 <section id="slutlig-modell" class="level2">
 <h2 class="anchored" data-anchor-id="slutlig-modell">Slutlig modell</h2>
 <p>Den slutliga modellen innehöll fem variabler som är associerade med demokratiindex när andra variabler hålls konstanta:</p>
-<div id="b2780b9f" class="cell" data-execution_count="5">
+<div id="164d1093" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Oberoende variabel</th>
+<th data-quarto-table-cell-role="th">Antal observationer</th>
+<th data-quarto-table-cell-role="th">R-squared</th>
+<th data-quarto-table-cell-role="th">Adj. R-squared</th>
+<th data-quarto-table-cell-role="th">F-statistic</th>
+<th data-quarto-table-cell-role="th">Prob (F-statistic)</th>
+<th data-quarto-table-cell-role="th">AIC</th>
+<th data-quarto-table-cell-role="th">BIC</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>demokratiindex</td>
+<td>135</td>
+<td>0.683</td>
+<td>0.67</td>
+<td>95.29</td>
+<td>0.0</td>
+<td>-136.448</td>
+<td>-119.017</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="26969158" class="cell" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="6">
 <div>
 
 

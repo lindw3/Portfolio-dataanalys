@@ -87,9 +87,11 @@ Den slutliga modellen innehöll fem variabler som är associerade med demokratii
 
 ```{python}
 model_info_final
-coef_table_final
 ```
 
+```{python}
+coef_table_final
+```
 
 # Resultat
 
