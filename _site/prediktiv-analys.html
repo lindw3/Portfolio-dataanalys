@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Explorativ analys – William Lind | Dataanalysportfolio</title>
+<title>Prediktiv analys – William Lind | Dataanalysportfolio</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,7 +26,7 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -70,6 +70,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="styles.css">
@@ -125,6 +128,24 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#frågeställning" id="toc-frågeställning" class="nav-link active" data-scroll-target="#frågeställning">Frågeställning</a></li>
+  <li><a href="#databearbetning" id="toc-databearbetning" class="nav-link" data-scroll-target="#databearbetning">Databearbetning</a></li>
+  <li><a href="#prediktion-med-maskininlärningsmodeller" id="toc-prediktion-med-maskininlärningsmodeller" class="nav-link" data-scroll-target="#prediktion-med-maskininlärningsmodeller">Prediktion med maskininlärningsmodeller</a>
+  <ul class="collapse">
+  <li><a href="#metod" id="toc-metod" class="nav-link" data-scroll-target="#metod">Metod</a>
+  <ul class="collapse">
+  <li><a href="#logistisk-regression" id="toc-logistisk-regression" class="nav-link" data-scroll-target="#logistisk-regression">Logistisk regression</a></li>
+  <li><a href="#gradient-boosting-tree" id="toc-gradient-boosting-tree" class="nav-link" data-scroll-target="#gradient-boosting-tree">Gradient Boosting Tree</a></li>
+  <li><a href="#k-nearest-neighbors" id="toc-k-nearest-neighbors" class="nav-link" data-scroll-target="#k-nearest-neighbors">K-Nearest-Neighbors</a></li>
+  <li><a href="#random-forest" id="toc-random-forest" class="nav-link" data-scroll-target="#random-forest">Random Forest</a></li>
+  <li><a href="#stacking-classifier" id="toc-stacking-classifier" class="nav-link" data-scroll-target="#stacking-classifier">Stacking Classifier</a></li>
+  <li><a href="#sammanfattning-av-resultaten" id="toc-sammanfattning-av-resultaten" class="nav-link" data-scroll-target="#sammanfattning-av-resultaten">Sammanfattning av resultaten</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#vidareutveckling-av-den-optimala-modellen" id="toc-vidareutveckling-av-den-optimala-modellen" class="nav-link" data-scroll-target="#vidareutveckling-av-den-optimala-modellen">Vidareutveckling av den optimala modellen</a>
+  <ul class="collapse">
+  <li><a href="#rfe-analys" id="toc-rfe-analys" class="nav-link" data-scroll-target="#rfe-analys">RFE-analys</a></li>
+  <li><a href="#reducerad-modell" id="toc-reducerad-modell" class="nav-link" data-scroll-target="#reducerad-modell">Reducerad modell</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -133,7 +154,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Explorativ analys</h1>
+<h1 class="title">Prediktiv analys</h1>
 </div>
 
 
@@ -152,8 +173,329 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="frågeställning" class="level1">
 <h1>Frågeställning</h1>
+<p>Hur bra kan en maskininlärningsmodell förutse vilka länder som är demokratier utifrån tillgängliga data över samhällsindikatorer?</p>
+</section>
+<section id="databearbetning" class="level1">
+<h1>Databearbetning</h1>
+<p>Analyserna är gjorda för 2021, då detta år var det år där flest länder hade tillgängliga data för de variabler som analyserades (totalt 343 länder).</p>
+<p>Först så …</p>
+<p>Hantering av NaN</p>
+<p>Bortfallshantering (exkludering av variabler/länder + imputering)</p>
+<p>Standardisering av data</p>
+</section>
+<section id="prediktion-med-maskininlärningsmodeller" class="level1">
+<h1>Prediktion med maskininlärningsmodeller</h1>
+<section id="metod" class="level2">
+<h2 class="anchored" data-anchor-id="metod">Metod</h2>
+<p>80/20 träningsdata/testdata</p>
+<p>Förklara hur och varför indelningen av X_train, y_train m.m. sker och hur jämförelser sedan görs utifrån respektive modell.</p>
+<p>KFold &amp; GridSearchCV (särskilt bra med mindre datapunkter för att köra flera iterationer?)</p>
+<section id="logistisk-regression" class="level3">
+<h3 class="anchored" data-anchor-id="logistisk-regression">Logistisk regression</h3>
+<p>Vad? Varför? Hur?</p>
+</section>
+<section id="gradient-boosting-tree" class="level3">
+<h3 class="anchored" data-anchor-id="gradient-boosting-tree">Gradient Boosting Tree</h3>
+<p>Vad? Varför? Hur?</p>
+</section>
+<section id="k-nearest-neighbors" class="level3">
+<h3 class="anchored" data-anchor-id="k-nearest-neighbors">K-Nearest-Neighbors</h3>
+<p>Vad? Varför? Hur?</p>
+</section>
+<section id="random-forest" class="level3">
+<h3 class="anchored" data-anchor-id="random-forest">Random Forest</h3>
+<p>Vad? Varför? Hur?</p>
+</section>
+<section id="stacking-classifier" class="level3">
+<h3 class="anchored" data-anchor-id="stacking-classifier">Stacking Classifier</h3>
+<p>Vad? Varför? Hur?</p>
+</section>
+<section id="sammanfattning-av-resultaten" class="level3">
+<h3 class="anchored" data-anchor-id="sammanfattning-av-resultaten">Sammanfattning av resultaten</h3>
+<div id="19b7917a" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
 
 
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">model</th>
+<th data-quarto-table-cell-role="th">Accuracy</th>
+<th data-quarto-table-cell-role="th">Precision</th>
+<th data-quarto-table-cell-role="th">Recall</th>
+<th data-quarto-table-cell-role="th">F1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>Logistic Regression</td>
+<td>0.944444</td>
+<td>0.947368</td>
+<td>0.947368</td>
+<td>0.947368</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>Random Forest</td>
+<td>0.861111</td>
+<td>0.850000</td>
+<td>0.894737</td>
+<td>0.871795</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>KNN</td>
+<td>0.750000</td>
+<td>0.750000</td>
+<td>0.789474</td>
+<td>0.769231</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>Gradient Boosting</td>
+<td>0.833333</td>
+<td>0.842105</td>
+<td>0.842105</td>
+<td>0.842105</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>Stacking</td>
+<td>0.916667</td>
+<td>0.900000</td>
+<td>0.947368</td>
+<td>0.923077</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="0aa22df4" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">feature</th>
+<th data-quarto-table-cell-role="th">coefficient</th>
+<th data-quarto-table-cell-role="th">abs_coef</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>korruption_index</td>
+<td>-1.211614</td>
+<td>1.211614</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>energi_percapita</td>
+<td>-0.523747</td>
+<td>0.523747</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>statligautgifter_andel_bnp</td>
+<td>0.469879</td>
+<td>0.469879</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>handel_andel_gdp</td>
+<td>-0.299364</td>
+<td>0.299364</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>barn_per_kvinna</td>
+<td>-0.249664</td>
+<td>0.249664</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>livstillfredsställelse</td>
+<td>0.243288</td>
+<td>0.243288</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>skatt_andel_bnp</td>
+<td>0.158603</td>
+<td>0.158603</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>co2_percapita</td>
+<td>-0.003788</td>
+<td>0.003788</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">8</th>
+<td>livslängd</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">9</th>
+<td>skolår</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">10</th>
+<td>andel_kvinnor_arbete</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">11</th>
+<td>utbildning_andel_gdp</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">12</th>
+<td>suicid/100k</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">13</th>
+<td>fetma_andel</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">14</th>
+<td>gdp_per_capita</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">15</th>
+<td>mord_percapita</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">16</th>
+<td>död_i_konflikt_percapita</td>
+<td>0.000000</td>
+<td>0.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="vidareutveckling-av-den-optimala-modellen" class="level1">
+<h1>Vidareutveckling av den optimala modellen</h1>
+<p>Nästa steg var att försöka optimera den bästa modellen (logreg) för att hitta den modell med så få variabler som möjligt, för att försöka hitta de variabler som är viktigast för att ge samma prediktionsförmåga som modellen som helhet.</p>
+<section id="rfe-analys" class="level2">
+<h2 class="anchored" data-anchor-id="rfe-analys">RFE-analys</h2>
+<div id="fd474c59" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="prediktiv-analys_files/figure-html/cell-5-output-1.png" width="681" height="453" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="4778e093" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>"['co2_percapita', 'energi_percapita', 'skatt_andel_bnp', 'statligautgifter_andel_bnp', 'handel_andel_gdp', 'livstillfredsställelse', 'barn_per_kvinna', 'korruption_index']"</code></pre>
+</div>
+</div>
+</section>
+<section id="reducerad-modell" class="level2">
+<h2 class="anchored" data-anchor-id="reducerad-modell">Reducerad modell</h2>
+<p>En modell med dessa åtta variabler hade den bästa prediktionsförmågan av vilka länder som var demokratier 2021. De är rangordnade utifrån…</p>
+<div id="9054eb07" class="cell" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">feature</th>
+<th data-quarto-table-cell-role="th">coefficient</th>
+<th data-quarto-table-cell-role="th">abs_coef</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>korruption_index</td>
+<td>-1.385110</td>
+<td>1.385110</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>statligautgifter_andel_bnp</td>
+<td>0.694908</td>
+<td>0.694908</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>energi_percapita</td>
+<td>-0.565511</td>
+<td>0.565511</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>handel_andel_gdp</td>
+<td>-0.521053</td>
+<td>0.521053</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>livstillfredsställelse</td>
+<td>0.510181</td>
+<td>0.510181</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>barn_per_kvinna</td>
+<td>-0.389491</td>
+<td>0.389491</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">6</th>
+<td>co2_percapita</td>
+<td>-0.382465</td>
+<td>0.382465</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">7</th>
+<td>skatt_andel_bnp</td>
+<td>0.221615</td>
+<td>0.221615</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+
+
+</section>
 </section>
 
 </main> <!-- /main -->

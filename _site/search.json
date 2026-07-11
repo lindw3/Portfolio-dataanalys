@@ -2,9 +2,30 @@
   {
     "objectID": "prediktiv-analys.html",
     "href": "prediktiv-analys.html",
-    "title": "Explorativ analys",
+    "title": "Prediktiv analys",
     "section": "",
-    "text": "Frågeställning"
+    "text": "Hur bra kan en maskininlärningsmodell förutse vilka länder som är demokratier utifrån tillgängliga data över samhällsindikatorer?"
+  },
+  {
+    "objectID": "prediktiv-analys.html#metod",
+    "href": "prediktiv-analys.html#metod",
+    "title": "Prediktiv analys",
+    "section": "Metod",
+    "text": "Metod\n80/20 träningsdata/testdata\nFörklara hur och varför indelningen av X_train, y_train m.m. sker och hur jämförelser sedan görs utifrån respektive modell.\nKFold & GridSearchCV (särskilt bra med mindre datapunkter för att köra flera iterationer?)\n\nLogistisk regression\nVad? Varför? Hur?\n\n\nGradient Boosting Tree\nVad? Varför? Hur?\n\n\nK-Nearest-Neighbors\nVad? Varför? Hur?\n\n\nRandom Forest\nVad? Varför? Hur?\n\n\nStacking Classifier\nVad? Varför? Hur?\n\n\nSammanfattning av resultaten\n\n\n\n\n\n\n\n\n\nmodel\nAccuracy\nPrecision\nRecall\nF1\n\n\n\n\n0\nLogistic Regression\n0.944444\n0.947368\n0.947368\n0.947368\n\n\n1\nRandom Forest\n0.861111\n0.850000\n0.894737\n0.871795\n\n\n2\nKNN\n0.750000\n0.750000\n0.789474\n0.769231\n\n\n3\nGradient Boosting\n0.833333\n0.842105\n0.842105\n0.842105\n\n\n4\nStacking\n0.916667\n0.900000\n0.947368\n0.923077\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nfeature\ncoefficient\nabs_coef\n\n\n\n\n0\nkorruption_index\n-1.211614\n1.211614\n\n\n1\nenergi_percapita\n-0.523747\n0.523747\n\n\n2\nstatligautgifter_andel_bnp\n0.469879\n0.469879\n\n\n3\nhandel_andel_gdp\n-0.299364\n0.299364\n\n\n4\nbarn_per_kvinna\n-0.249664\n0.249664\n\n\n5\nlivstillfredsställelse\n0.243288\n0.243288\n\n\n6\nskatt_andel_bnp\n0.158603\n0.158603\n\n\n7\nco2_percapita\n-0.003788\n0.003788\n\n\n8\nlivslängd\n0.000000\n0.000000\n\n\n9\nskolår\n0.000000\n0.000000\n\n\n10\nandel_kvinnor_arbete\n0.000000\n0.000000\n\n\n11\nutbildning_andel_gdp\n0.000000\n0.000000\n\n\n12\nsuicid/100k\n0.000000\n0.000000\n\n\n13\nfetma_andel\n0.000000\n0.000000\n\n\n14\ngdp_per_capita\n0.000000\n0.000000\n\n\n15\nmord_percapita\n0.000000\n0.000000\n\n\n16\ndöd_i_konflikt_percapita\n0.000000\n0.000000"
+  },
+  {
+    "objectID": "prediktiv-analys.html#rfe-analys",
+    "href": "prediktiv-analys.html#rfe-analys",
+    "title": "Prediktiv analys",
+    "section": "RFE-analys",
+    "text": "RFE-analys\n\n\n\n\n\n\n\n\n\n\n\n\"['co2_percapita', 'energi_percapita', 'skatt_andel_bnp', 'statligautgifter_andel_bnp', 'handel_andel_gdp', 'livstillfredsställelse', 'barn_per_kvinna', 'korruption_index']\""
+  },
+  {
+    "objectID": "prediktiv-analys.html#reducerad-modell",
+    "href": "prediktiv-analys.html#reducerad-modell",
+    "title": "Prediktiv analys",
+    "section": "Reducerad modell",
+    "text": "Reducerad modell\nEn modell med dessa åtta variabler hade den bästa prediktionsförmågan av vilka länder som var demokratier 2021. De är rangordnade utifrån…\n\n\n\n\n\n\n\n\n\nfeature\ncoefficient\nabs_coef\n\n\n\n\n0\nkorruption_index\n-1.385110\n1.385110\n\n\n1\nstatligautgifter_andel_bnp\n0.694908\n0.694908\n\n\n2\nenergi_percapita\n-0.565511\n0.565511\n\n\n3\nhandel_andel_gdp\n-0.521053\n0.521053\n\n\n4\nlivstillfredsställelse\n0.510181\n0.510181\n\n\n5\nbarn_per_kvinna\n-0.389491\n0.389491\n\n\n6\nco2_percapita\n-0.382465\n0.382465\n\n\n7\nskatt_andel_bnp\n0.221615\n0.221615"
   },
   {
     "objectID": "index.html",
@@ -25,7 +46,7 @@
     "href": "index.html#data",
     "title": "Dataanalysportfolio",
     "section": "Data",
-    "text": "Data\nSamtliga dataset kommer från Our World in Data, vilket är en organisation som sammanställer och visualiserar historisk och globalt täckande statistik inom områden som fattigdom, sjukdom, hunger, klimatförändringar, krig och ojämlikhet. Den data de sammanställer kommer från flera olika källor."
+    "text": "Data\nSamtliga projekt utgår från en databas som jag sammanställde utifrån 25 separata dataset från Our World in Data, vilket är en organisation som sammanställer och visualiserar historisk och globalt täckande statistik inom områden som fattigdom, sjukdom, hunger, klimatförändringar, krig och ojämlikhet. Den data de sammanställer kommer från flera olika källor."
   },
   {
     "objectID": "index.html#analysfrågor",
@@ -39,14 +60,7 @@
     "href": "explorativ-analys.html",
     "title": "Explorativ analys",
     "section": "",
-    "text": "Jag kombinerade 24 dataset från Our World in Data för att skapa en gemensam databas över samhällsindikatorer på internationell nivå för ca. 400 länder. Dataseten innehåller indikatorer inom flera områden, såsom hälsa, ekonomi, jämställdhet, sociala faktorer och institutionella faktorer.\nAnalyserna är gjorda för antingen 2021 eller 2022, då dessa år var de år där flest länder hade tillgängliga data för de variabler som analyserades."
-  },
-  {
-    "objectID": "explorativ-analys.html#dataset",
-    "href": "explorativ-analys.html#dataset",
-    "title": "Explorativ analys",
-    "section": "",
-    "text": "Jag kombinerade 24 dataset från Our World in Data för att skapa en gemensam databas över samhällsindikatorer på internationell nivå för ca. 400 länder. Dataseten innehåller indikatorer inom flera områden, såsom hälsa, ekonomi, jämställdhet, sociala faktorer och institutionella faktorer.\nAnalyserna är gjorda för antingen 2021 eller 2022, då dessa år var de år där flest länder hade tillgängliga data för de variabler som analyserades."
+    "text": "Analyserna är gjorda för antingen 2021 eller 2022, då dessa år var de år där flest länder hade tillgängliga data för de variabler som analyserades."
   },
   {
     "objectID": "explorativ-analys.html#samband-mellan-gini-koefficient-och-lönegap-mellan-könen",

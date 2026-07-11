@@ -128,7 +128,6 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#frågeställning" id="toc-frågeställning" class="nav-link active" data-scroll-target="#frågeställning">Frågeställning</a></li>
-  <li><a href="#dataset" id="toc-dataset" class="nav-link" data-scroll-target="#dataset">Dataset</a></li>
   <li><a href="#databearbetning" id="toc-databearbetning" class="nav-link" data-scroll-target="#databearbetning">Databearbetning</a></li>
   <li><a href="#dataanalys" id="toc-dataanalys" class="nav-link" data-scroll-target="#dataanalys">Dataanalys</a>
   <ul class="collapse">
@@ -167,13 +166,9 @@ ul.task-list li input[type="checkbox"] {
 <h1>Frågeställning</h1>
 <p>Vilka samhällsfaktorer är associerade med demokratiindex?</p>
 </section>
-<section id="dataset" class="level1">
-<h1>Dataset</h1>
-<p>Jag kombinerade 24 dataset från <a href="https://ourworldindata.org/">Our World in Data</a> för att skapa en gemensam databas över samhällsindikatorer på internationell nivå från ca. 400 länder. Dataseten innehåller indikatorer inom flera områden, såsom hälsa, ekonomi, jämställdhet, sociala faktorer och institutionella faktorer.</p>
-<p>Analyserna är gjorda för 2021, då detta år var det år där flest länder hade tillgängliga data för de variabler som analyserades (totalt 343 länder).</p>
-</section>
 <section id="databearbetning" class="level1">
 <h1>Databearbetning</h1>
+<p>Analyserna är gjorda för 2021, då detta år var det år där flest länder hade tillgängliga data för de variabler som analyserades (totalt 343 länder).</p>
 <p>Först exkluderades en variabel som helt saknade data för det givna året. Därefter exkluderades samtliga länder som saknade data för 25+ procent av de variabler som återstod, vilket innebar att 135 länder återstod i analysen. Sedan exkluderades fyra ytterligare variabler som saknade data för 25+ procent av de länder som återstod. För att samtliga variabler skulle kunna användas i regressionsmodellen genomfördes sedan en imputering av resterande saknade värden, där saknade värden tillgavs medianvärdet för respektive variabel. Slutligen standardiserades alla responsvariabler då de skilde sig åt i storleken på värden, där vissa värden var mellan 0-1 och andra uppgick till tiotals tusen.</p>
 </section>
 <section id="dataanalys" class="level1">
@@ -181,7 +176,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="deskriptiv-modell" class="level2">
 <h2 class="anchored" data-anchor-id="deskriptiv-modell">Deskriptiv modell</h2>
 <p>I en första deskriptiv modell inkluderades samtliga variabler för att undersöka vilka variabler som hade positiva respektive negativa samband med demokratiindex.</p>
-<div id="3d99a1b0" class="cell" data-execution_count="2">
+<div id="fe9d85a7" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -371,7 +366,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="kontroll-av-multikollinearitet" class="level2">
 <h2 class="anchored" data-anchor-id="kontroll-av-multikollinearitet">Kontroll av multikollinearitet</h2>
 <p>För att kunna besvara frågeställningen genomfördes först en VIF-analys för att identifiera variabler som har en hög korrelation med andra variabler.</p>
-<div id="c6faaebb" class="cell" data-execution_count="3">
+<div id="7f22d1b2" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
@@ -483,7 +478,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>I analysen framkom att Human Development Index (HDI) hade hög multikollinearitet, vilket är rimligt då det är ett sammansatt mått för bland annat utbildning, hälsa och inkomst - variabler som också finns med i modellen. Därför exkluderades HDI från modellen.</p>
 <p>Vid en ny VIF-analys fick samtliga resterande variabler en faktor under 10, vilket ofta ses som ett tillfredsställande värde vid VIF-analyser.</p>
-<div id="5519c103" class="cell" data-execution_count="4">
+<div id="c2f920c1" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 
@@ -611,7 +606,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="slutlig-modell" class="level2">
 <h2 class="anchored" data-anchor-id="slutlig-modell">Slutlig modell</h2>
 <p>Den slutliga modellen innehöll fem variabler som är associerade med demokratiindex när andra variabler hålls konstanta:</p>
-<div id="164d1093" class="cell" data-execution_count="5">
+<div id="6efe01be" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
@@ -648,7 +643,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<div id="26969158" class="cell" data-execution_count="6">
+<div id="d40b8dc1" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
 

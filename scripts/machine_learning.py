@@ -1,21 +1,20 @@
 
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import StackingClassifier, RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.ensemble import AdaBoostClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
-
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, classification_report
+from sklearn.feature_selection import RFE
+from pathlib import Path
 
 
     # Funktion för att evaluera modeller
@@ -60,59 +59,60 @@ demokrati = demokrati[demokrati["år"] == 2021]
 # Gör om demokrati till en binär variabel. 2-3 = demokrati och 0-1 = autokrati.
 demokrati["demokrati"] = (demokrati["demokrati"] >= 2).astype(int)
 
-
 data = pd.read_parquet(
     "data/combined_dataset.parquet"
 )
 
 
 
-
 # --------------------------------------------------
-# DATAFÖRBEREDELSE
+# DATABEARBETNING
 # --------------------------------------------------
 
-# Begränsar analysen till 2021 eftersom de flesta
-# indikatorer har relativt hög täckning detta år.
+
+    # Begränsar analysen till 2021 eftersom de flesta
+    # indikatorer har relativt hög täckning detta år.
 model_data = data[
     data["år"] == 2021
 ]
 
-# Slå ihop databasen med demokrati-data
+    # Slå ihop databasen med demokrati-data
 model_data = model_data.merge(
     demokrati[["land", "år", "demokrati"]],
     on=["land", "år"],
     how="left"
 )
 
+    # Ta bort observationer där målvariabeln saknas
+model_data = model_data.dropna(subset=["demokrati"])
 
-# Land och år används inte som prediktorer.
+
+    # Land och år används inte som prediktorer.
+    # Exkludera även demokratiindex, som är ett mått på länders demokratiska funktioner
+    # Exkludera även HDI då det är en "samlingsvariabel" för utbildning, livslängd och GDP per capita
 model_data = model_data.drop(
     columns=[
         "land",
-        "år"
+        "år",
+        "demokratiindex",
+        "hdi"
     ]
 )
 
 
-# Tar bort variabler som helt saknar data.
+    # Tar bort variabler som helt saknar data.
 model_data = model_data.dropna(
     axis=1,
     how="all"
 )
 
-# -----------------------------
-# Målvariabel
-# -----------------------------
-
+    # Målvariabel
 y = model_data["demokrati"]
 
 X = model_data.drop(columns="demokrati")
 
 
-# -----------------------------
-# Exkludera variabler med >25 % bortfall
-# -----------------------------
+    # Exkludera variabler med >25 % bortfall
 
 missing_share = X.isna().mean()
 
@@ -127,33 +127,23 @@ removed_variables = (
         missing_share=lambda x: (x["missing_share"] * 100).round(1)
     )
 )
-
+y
 X = X.loc[:, missing_share <= 0.25]
 
 
-# -----------------------------
-# Imputera återstående NaN
-# -----------------------------
-
-imputer = SimpleImputer(strategy="median")
-
-
-# -----------------------------
-# Train/Test split
-# -----------------------------
+    # Train/Test split
 
 X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
     test_size=0.20,
     stratify=y,
-    random_state=1
+    random_state=3
 )
 
 
-# -----------------------------
-# Imputering
-# -----------------------------
+    # Imputering
+imputer = SimpleImputer(strategy="median")
 
 X_train = pd.DataFrame(
     imputer.fit_transform(X_train),
@@ -167,7 +157,7 @@ X_test = pd.DataFrame(
     index=X_test.index
 )
 
-
+    # Standardisering av data
 scaler = StandardScaler()
 
 X_train = pd.DataFrame(
@@ -189,16 +179,16 @@ X_test = pd.DataFrame(
 # Testa modellerna
 # -----------------------------
 
-  # LOGISTISK REGRESSION #
+  # LOGISTISK REGRESSION
 
   # Gör GridSearch utifrån olika parametrar
-C_values = range(1,11)
-parameters = {'penalty': ['l1', 'l2'], 'C': C_values}
+C = np.logspace(-3, 2, 15)
+parameters = {'C': C}
 
   # Skapa modellen
-lr = LogisticRegression(solver='liblinear', max_iter=1000)
+lr = LogisticRegression(solver='liblinear', max_iter=1000, random_state=3)
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=3)
-logreg_grid = GridSearchCV(lr, parameters, cv=cv)
+logreg_grid = GridSearchCV(lr, parameters, cv=cv, scoring="f1")
 logreg_grid.fit(X_train, y_train)
 
 logreg_results = evaluate_model(
@@ -217,42 +207,25 @@ logreg_coefficients = (
 )
 
 
-  # DECISION TREE #
 
-tree = DecisionTreeClassifier()
-parameters = {'min_samples_split': [2,3,4], 'max_depth': [2,3,4]}
-cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=3)
+    # GRADIENT BOOSTING TREE CLASSIFIER
+grad_clf = GradientBoostingClassifier(n_estimators = 15, random_state=3)
 
-tree_grid = GridSearchCV(tree, parameters, cv=cv)
-tree_grid.fit(X_train, y_train)
-
-tree_results = evaluate_model(
-    tree_grid.best_estimator_,
-    X_test,
-    y_test
-)
-
-
-
-# ADAPTIVE BOOSTING TREE CLASSIFIER # 
-
-decision_stump = DecisionTreeClassifier(max_depth = 1)
-ada_clf = AdaBoostClassifier(decision_stump, n_estimators = 5)
-ada_clf.fit(X_train, y_train)
-
-ada_results = evaluate_model(
-    ada_clf,
-    X_test,
-    y_test
-)
-
-
- # GRADIENT BOOSTING TREE CLASSIFIER # 
-grad_clf = GradientBoostingClassifier(n_estimators = 15)
 grad_clf.fit(X_train, y_train)
 
+parameters = {
+    'n_estimators': [25, 50, 100],
+    'learning_rate': [0.01, 0.1, 0.5, 1]
+    }
+
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=3)
+
+grad_grid = GridSearchCV(grad_clf, parameters, cv=cv, scoring="f1")
+
+grad_grid.fit(X_train, y_train)
+
 grad_results = evaluate_model(
-    grad_clf,
+    grad_grid.best_estimator_,
     X_test,
     y_test
 )
@@ -260,19 +233,21 @@ grad_results = evaluate_model(
 grad_importance = (
     pd.DataFrame({
         "feature": X_train.columns,
-        "importance": grad_clf.feature_importances_
+        "importance": grad_grid.best_estimator_.feature_importances_
     })
     .sort_values("importance", ascending=False)
 )
 
 
 
-  # KNN #
+    # KNN
 knn = KNeighborsClassifier()
-parameters = {'n_neighbors': range(1,15)}
+parameters = {'n_neighbors': range(1,31),
+              'weights': ["uniform", "distance"],
+              'metric': ["euclidean", "manhattan"]}
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=3)
 
-knn_grid = GridSearchCV(knn, parameters, cv=cv)
+knn_grid = GridSearchCV(knn, parameters, cv=cv, scoring="f1")
 knn_grid.fit(X_train, y_train)
 
 knn_results = evaluate_model(
@@ -281,14 +256,17 @@ knn_results = evaluate_model(
     y_test
 )
 
+    # RANDOM FOREST
 
-  # RANDOM FOREST #
-
-rfc = RandomForestClassifier()
-parameters = {'min_samples_split': [2,3,4], 'max_depth': range(5,13)}
+rfc = RandomForestClassifier(random_state=3)
+parameters = {'n_estimators': [100, 300, 500],
+              'min_samples_split': [2,4,6,8,10], 
+              'max_depth': range(5,13),
+              'min_samples_leaf': [1,2,4,6]
+              }
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=3)
 
-forest_grid = GridSearchCV(rfc, parameters, cv=cv)
+forest_grid = GridSearchCV(rfc, parameters, cv=cv, scoring="f1")
 forest_grid.fit(X_train, y_train)
 
 forest_results = evaluate_model(
@@ -306,13 +284,13 @@ forest_importance = (
 )
 
  
-  # STACKING CLASSIFIER: Logistisk Regression och Random Forest #
+    # STACKING CLASSIFIER: Logistisk Regression och Random Forest #
 
-  # Skapa två nivåer: Först mix av LogReg och RFC för att träna modellen, sedan görs prediktionen med random forest
+    # Skapa två nivåer: Först mix av LogReg och RFC för att träna modellen, sedan görs prediktionen med random forest
 level_0_estimators = dict()
-level_0_estimators["logreg"] = LogisticRegression(random_state=3)
-level_0_estimators["forest"] = RandomForestClassifier(random_state=3)
-
+    # Använd de tidigare bästa estimerarna från logreg och forest
+level_0_estimators["logreg"] = logreg_grid.best_estimator_
+level_0_estimators["forest"] = forest_grid.best_estimator_
 level_1_estimator = RandomForestClassifier(random_state=3)
 
   # KFold för att träna modellen med mindre samples av träningsdatan
@@ -321,7 +299,6 @@ stacking_clf = StackingClassifier(estimators=list(level_0_estimators.items()),
                                     final_estimator=level_1_estimator, 
                                     passthrough=True, cv=kfold, stack_method="predict_proba")
 
-
 stacking_clf.fit(X_train, y_train)
 
 stacking_results = evaluate_model(
@@ -329,7 +306,6 @@ stacking_results = evaluate_model(
     X_test,
     y_test
 )
-
 
 
 # -----------------------------
@@ -343,31 +319,29 @@ baseline_accuracy = y.value_counts(normalize=True).max()
 model_parameters = pd.DataFrame({
     "Model": [
         "Logistic Regression",
-        "Decision Tree",
         "KNN",
-        "Random Forest"
+        "Random Forest",
+        "Gradient Boost"
     ],
     "Best parameters": [
         logreg_grid.best_params_,
-        tree_grid.best_params_,
         knn_grid.best_params_,
-        forest_grid.best_params_
+        forest_grid.best_params_,
+        grad_grid.best_params_
     ],
     "CV score": [
         logreg_grid.best_score_,
-        tree_grid.best_score_,
         knn_grid.best_score_,
-        forest_grid.best_score_
+        forest_grid.best_score_,
+        grad_grid.best_score_
     ]
 }).round(3)
 
     # Summera alla resultat
 results = {
     "Logistic Regression": logreg_results,
-    "Decision Tree": tree_results,
     "Random Forest": forest_results,
     "KNN": knn_results,
-    "AdaBoost": ada_results,
     "Gradient Boosting": grad_results,
     "Stacking": stacking_results
 }
@@ -384,3 +358,133 @@ model_summary = (
     })
     .round(3)
 )
+
+    # Bästa modell: logistisk regression
+    # Kan bero på mer linjära samband generellt sett
+    # Kan bero på litet underlag där det är svårt att fånga upp komplexa samband - därför vinner den enklare modellen
+
+
+
+# -----------------------------
+# Modellförenkling med RFE
+# Görs på den bästa modellen (logistisk regression)
+# -----------------------------
+
+feature_results = []
+
+for n_features in range(3, X_train.shape[1] + 1):
+
+    # RFE
+    rfe = RFE(
+        estimator=LogisticRegression(
+            solver="liblinear",
+            max_iter=1000,
+            random_state=3
+        ),
+        n_features_to_select=n_features
+    )
+
+    rfe.fit(
+        X_train,
+        y_train
+    )
+
+    selected_features = X_train.columns[rfe.support_]
+
+    X_train_rfe = X_train[selected_features]
+
+
+    # Modell
+    model = LogisticRegression(
+        solver="liblinear",
+        max_iter=1000,
+        random_state=3
+    )
+
+
+    # Cross-validation
+    cv_scores = cross_val_score(
+        model,
+        X_train_rfe,
+        y_train,
+        cv=cv,
+        scoring="f1"
+    )
+
+    feature_results.append({
+        "n_features": n_features,
+        "cv_f1_mean": cv_scores.mean(),
+        "cv_f1_std": cv_scores.std(),
+        "features": list(selected_features)
+    })
+
+
+rfe_summary = pd.DataFrame(feature_results)
+
+    # Spara de variabler som inkluderades i den optimala modellen
+best_rfe_features = (
+    rfe_summary
+    .loc[
+        rfe_summary["cv_f1_mean"].idxmax(),
+        "features"
+    ]
+)
+
+
+    # Skapa en sista modell utifrån de variabler som återstår efter RFE-analysen
+
+X_train_final = X_train[best_rfe_features]
+X_test_final = X_test[best_rfe_features]
+
+C = np.logspace(-3, 2, 15)
+parameters = {'C': C}
+
+lr = LogisticRegression(solver='liblinear', max_iter=1000, random_state=3)
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=3)
+
+logreg_grid_final = GridSearchCV(lr, parameters, cv=cv, scoring="f1")
+logreg_grid_final.fit(X_train_final, y_train)
+
+logreg_results_final = evaluate_model(
+    logreg_grid_final.best_estimator_,
+    X_test_final,
+    y_test
+)
+
+logreg_coefficients_final = (
+    pd.DataFrame({
+        "feature": X_train_final.columns,
+        "coefficient": logreg_grid_final.best_estimator_.coef_[0]
+    })
+    .assign(abs_coef=lambda x: x.coefficient.abs())
+    .sort_values("abs_coef", ascending=False)
+)
+
+
+# --------------------------------------------------
+# EXPORTERA RESULTAT TILL CSV-FILER
+# --------------------------------------------------
+
+results_dir = Path(__file__).resolve().parent.parent / "data" / "results_ml"
+results_dir.mkdir(parents=True, exist_ok=True)
+
+exports = {
+    "model_summary.csv": (
+        model_summary.reset_index()
+        .rename(columns={"index": "model"})
+    ),
+    "model_parameters.csv": model_parameters,
+    "removed_variables.csv": removed_variables,
+    "rfe_summary.csv": rfe_summary,
+    "best_rfe_features.csv": best_rfe_features,
+    "logreg_coefficients.csv": logreg_coefficients,
+    "gradient_boosting_importance.csv": grad_importance,
+    "random_forest_importance.csv": forest_importance,
+    "logreg_coefficients_final.csv": logreg_coefficients_final,
+    "logreg_results_final.csv": logreg_results_final,
+    "baseline_accuracy.csv": pd.DataFrame({"baseline_accuracy": [baseline_accuracy]})
+}
+
+for filename, dataframe in exports.items():
+    dataframe.to_csv(results_dir / filename, index=False)
+

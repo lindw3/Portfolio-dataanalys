@@ -2,10 +2,6 @@
 title: "Multipel regression"
 ---
 
-# Frågeställning
-
-Vilka samhällsfaktorer är associerade med demokratiindex?
-
 ```{python}
 from scripts.regression import (
 model_data,
@@ -23,13 +19,13 @@ model_info_final
 )
 ```
 
-# Dataset
+# Frågeställning
 
-Jag kombinerade 24 dataset från [Our World in Data](https://ourworldindata.org/) för att skapa en gemensam databas över samhällsindikatorer på internationell nivå från ca. 400 länder. Dataseten innehåller indikatorer inom flera områden, såsom hälsa, ekonomi, jämställdhet, sociala faktorer och institutionella faktorer.
-
-Analyserna är gjorda för 2021, då detta år var det år där flest länder hade tillgängliga data för de variabler som analyserades (totalt 343 länder).
+Vilka samhällsfaktorer är associerade med demokratiindex?
 
 # Databearbetning
+
+Analyserna är gjorda för 2021, då detta år var det år där flest länder hade tillgängliga data för de variabler som analyserades (totalt 343 länder).
 
 Först exkluderades en variabel som helt saknade data för det givna året. Därefter exkluderades samtliga länder som saknade data för 25+ procent av de variabler som återstod, vilket innebar att 135 länder återstod i analysen. Sedan exkluderades fyra ytterligare variabler som saknade data för 25+ procent av de länder som återstod. För att samtliga variabler skulle kunna användas i regressionsmodellen genomfördes sedan en imputering av resterande saknade värden, där saknade värden tillgavs medianvärdet för respektive variabel. Slutligen standardiserades alla responsvariabler då de skilde sig åt i storleken på värden, där vissa värden var mellan 0-1 och andra uppgick till tiotals tusen.
 

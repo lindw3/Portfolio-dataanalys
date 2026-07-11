@@ -1,14 +1,147 @@
 ---
-title: "Explorativ analys"
+title: "Prediktiv analys"
 ---
 
-# Frågeställning
-
 ```{python}
-from scripts.machine_learning import (
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
+baseline_accuracy = pd.read_csv(
+    "data/results_ml/baseline_accuracy.csv"
+)
+
+logreg_coefficients = pd.read_csv(
+    "data/results_ml/logreg_coefficients.csv"
+)
+
+logreg_coefficients_final = pd.read_csv(
+    "data/results_ml/logreg_coefficients_final.csv"
+)
+
+logreg_results_final = pd.read_csv(
+    "data/results_ml/logreg_results_final.csv"
+)
+
+model_parameters = pd.read_csv(
+    "data/results_ml/model_parameters.csv"
+)
+
+model_summary = pd.read_csv(
+    "data/results_ml/model_summary.csv"
+)
+
+removed_variables = pd.read_csv(
+    "data/results_ml/removed_variables.csv"
+)
+
+rfe_summary = pd.read_csv(
+    "data/results_ml/rfe_summary.csv"
 )
 
 ```
 
+# Frågeställning
+Till vilken grad kan man förutse vilka länder som är demokratier utifrån tillgängliga data över samhällsindikatorer?
 
+# Databearbetning
+Analyserna är gjorda för 2021, då detta år var det år där flest länder hade tillgängliga data för de variabler som analyserades (totalt 343 länder).
+
+Som komplement till variablerna i databasen adderades kategoriska data över vilka länder som kategoriserats som demokratier respektive autokratier utifrån en sammanställning från Our World in Data.
+
+Först så ...
+
+Hantering av NaN
+
+Bortfallshantering (exkludering av variabler/länder + imputering)
+
+Standardisering av data
+
+
+
+# Prediktion med maskininlärningsmodeller
+
+## Metod
+
+80/20 träningsdata/testdata
+
+Förklara hur och varför indelningen av X_train, y_train m.m. sker och hur jämförelser sedan görs utifrån respektive modell.
+
+KFold & GridSearchCV (särskilt bra med mindre datapunkter för att köra flera iterationer?)
+
+
+### Logistisk regression
+Vad? Varför? Hur?
+
+### Gradient Boosting Tree
+Vad? Varför? Hur?
+
+### K-Nearest-Neighbors
+Vad? Varför? Hur?
+
+### Random Forest
+Vad? Varför? Hur?
+
+### Stacking Classifier
+Vad? Varför? Hur?
+
+### Sammanfattning av resultaten
+
+```{python}
+model_summary
+```
+
+```{python}
+logreg_coefficients
+```
+
+
+
+# Optimering av den bästa modellen
+
+Nästa steg var att försöka optimera den bästa modellen (logistisk regression) för att hitta den modell med så få variabler som möjligt, för att försöka hitta de variabler som är viktigast för att ge samma prediktionsförmåga som modellen som helhet.
+
+## RFE-analys
+
+```{python}
+fig_rfe, ax_rfe = plt.subplots(figsize=(8, 5))
+
+ax_rfe.errorbar(
+    rfe_summary["n_features"],
+    rfe_summary["cv_f1_mean"],
+    yerr=rfe_summary["cv_f1_std"],
+    marker="o"
+)
+
+ax_rfe.set_xlabel("Antal variabler")
+ax_rfe.set_ylabel("Cross-validation F1")
+ax_rfe.set_title("RFE: F1-score beroende på antal variabler")
+
+ax_rfe.set_xticks(
+    rfe_summary["n_features"]
+)
+```
+
+```{python}
+
+rfe_summary.loc[
+        rfe_summary["cv_f1_mean"].idxmax(),
+        "features"
+    ]
+
+```
+
+
+## Reducerad modell
+En modell med dessa åtta variabler hade den bästa prediktionsförmågan av vilka länder som var demokratier 2021. De är rangordnade utifrån...
+
+```{python}
+logreg_coefficients_final
+```
+
+```{python}
+logreg_results_final
+```
+
+## Slutsats
+Utifrån kännedom om länders (ange variablerna) kunde en maskininlärningsmodell förutse vilka länder som var demokratier eller autokratier till 
