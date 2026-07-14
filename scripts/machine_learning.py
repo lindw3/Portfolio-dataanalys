@@ -183,12 +183,15 @@ X_test = pd.DataFrame(
 
   # Gör GridSearch utifrån olika parametrar
 C = np.logspace(-3, 2, 15)
-parameters = {'C': C}
+parameters = {
+    'C': C,
+    "penalty": ["l1", "l2"]
+    }
 
   # Skapa modellen
 lr = LogisticRegression(solver='liblinear', max_iter=1000, random_state=3)
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=3)
-logreg_grid = GridSearchCV(lr, parameters, cv=cv, scoring="f1")
+logreg_grid = GridSearchCV(lr, parameters, cv=cv, scoring="accuracy")
 logreg_grid.fit(X_train, y_train)
 
 logreg_results = evaluate_model(
@@ -220,9 +223,11 @@ parameters = {
 
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=3)
 
-grad_grid = GridSearchCV(grad_clf, parameters, cv=cv, scoring="f1")
+grad_grid = GridSearchCV(grad_clf, parameters, cv=cv, scoring="accuracy")
 
 grad_grid.fit(X_train, y_train)
+
+grad_grid.cv_results_
 
 grad_results = evaluate_model(
     grad_grid.best_estimator_,
@@ -247,7 +252,7 @@ parameters = {'n_neighbors': range(1,31),
               'metric': ["euclidean", "manhattan"]}
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=3)
 
-knn_grid = GridSearchCV(knn, parameters, cv=cv, scoring="f1")
+knn_grid = GridSearchCV(knn, parameters, cv=cv, scoring="accuracy")
 knn_grid.fit(X_train, y_train)
 
 knn_results = evaluate_model(
@@ -259,14 +264,15 @@ knn_results = evaluate_model(
     # RANDOM FOREST
 
 rfc = RandomForestClassifier(random_state=3)
-parameters = {'n_estimators': [100, 300, 500],
-              'min_samples_split': [2,4,6,8,10], 
-              'max_depth': range(5,13),
-              'min_samples_leaf': [1,2,4,6]
-              }
+parameters = {
+    'n_estimators': [100, 300, 500],
+    'max_depth': [3, 5, 7, 10],
+    'min_samples_split': [2, 5, 10],
+    'min_samples_leaf': [1, 2, 4]
+}
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=3)
 
-forest_grid = GridSearchCV(rfc, parameters, cv=cv, scoring="f1")
+forest_grid = GridSearchCV(rfc, parameters, cv=cv, scoring="accuracy")
 forest_grid.fit(X_train, y_train)
 
 forest_results = evaluate_model(
@@ -294,7 +300,7 @@ level_0_estimators["forest"] = forest_grid.best_estimator_
 level_1_estimator = RandomForestClassifier(random_state=3)
 
   # KFold för att träna modellen med mindre samples av träningsdatan
-kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=3)
+kfold = StratifiedKFold(n_splits=5, shuffle=True, random_state=3)
 stacking_clf = StackingClassifier(estimators=list(level_0_estimators.items()), 
                                     final_estimator=level_1_estimator, 
                                     passthrough=True, cv=kfold, stack_method="predict_proba")
@@ -307,6 +313,17 @@ stacking_results = evaluate_model(
     y_test
 )
 
+stacking_cv_scores = cross_val_score(
+    stacking_clf,
+    X_train,
+    y_train,
+    cv=kfold,
+    scoring="accuracy"
+)
+
+stacking_cv_mean = stacking_cv_scores.mean()
+stacking_cv_std = stacking_cv_scores.std()
+
 
 # -----------------------------
 # Resultat att exportera till rapporten
@@ -316,24 +333,20 @@ stacking_results = evaluate_model(
 baseline_accuracy = y.value_counts(normalize=True).max()
 
     # Bästa modellparametrarna
-model_parameters = pd.DataFrame({
+model_comparison = pd.DataFrame({
     "Model": [
         "Logistic Regression",
         "KNN",
         "Random Forest",
-        "Gradient Boost"
+        "Gradient Boost",
+        "Stacking"
     ],
-    "Best parameters": [
-        logreg_grid.best_params_,
-        knn_grid.best_params_,
-        forest_grid.best_params_,
-        grad_grid.best_params_
-    ],
-    "CV score": [
+    "Mean CV accuracy": [
         logreg_grid.best_score_,
         knn_grid.best_score_,
         forest_grid.best_score_,
-        grad_grid.best_score_
+        grad_grid.best_score_,
+        stacking_cv_mean
     ]
 }).round(3)
 
@@ -408,41 +421,44 @@ for n_features in range(3, X_train.shape[1] + 1):
         X_train_rfe,
         y_train,
         cv=cv,
-        scoring="f1"
+        scoring="accuracy"
     )
 
     feature_results.append({
         "n_features": n_features,
-        "cv_f1_mean": cv_scores.mean(),
-        "cv_f1_std": cv_scores.std(),
+        "cv_accuracy_mean": cv_scores.mean(),
+        "cv_accuracy_std": cv_scores.std(),
         "features": list(selected_features)
     })
 
 
 rfe_summary = pd.DataFrame(feature_results)
 
-    # Spara de variabler som inkluderades i den optimala modellen
+    # Spara de variabler som inkluderades i den reducerade modellen
 best_rfe_features = (
     rfe_summary
     .loc[
-        rfe_summary["cv_f1_mean"].idxmax(),
+        rfe_summary["cv_accuracy_mean"].idxmax(),
         "features"
     ]
 )
 
 
-    # Skapa en sista modell utifrån de variabler som återstår efter RFE-analysen
+    # Skapa en reducerad modell utifrån de variabler som återstår efter RFE-analysen
 
 X_train_final = X_train[best_rfe_features]
 X_test_final = X_test[best_rfe_features]
 
 C = np.logspace(-3, 2, 15)
-parameters = {'C': C}
+parameters = {
+    'C': C,
+    "penalty": ["l1", "l2"]
+    }
 
 lr = LogisticRegression(solver='liblinear', max_iter=1000, random_state=3)
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=3)
 
-logreg_grid_final = GridSearchCV(lr, parameters, cv=cv, scoring="f1")
+logreg_grid_final = GridSearchCV(lr, parameters, cv=cv, scoring="accuracy")
 logreg_grid_final.fit(X_train_final, y_train)
 
 logreg_results_final = evaluate_model(
@@ -465,7 +481,12 @@ logreg_coefficients_final = (
 # EXPORTERA RESULTAT TILL CSV-FILER
 # --------------------------------------------------
 
-results_dir = Path(__file__).resolve().parent.parent / "data" / "results_ml"
+try:
+    project_root = Path(__file__).resolve().parent.parent
+except NameError:
+    project_root = Path.cwd()
+
+results_dir = project_root / "data" / "results_ml"
 results_dir.mkdir(parents=True, exist_ok=True)
 
 exports = {
@@ -473,15 +494,15 @@ exports = {
         model_summary.reset_index()
         .rename(columns={"index": "model"})
     ),
-    "model_parameters.csv": model_parameters,
+    "model_comparison.csv": model_comparison,
     "removed_variables.csv": removed_variables,
     "rfe_summary.csv": rfe_summary,
-    "best_rfe_features.csv": best_rfe_features,
+    "best_rfe_features.csv": pd.DataFrame({"best_rfe_features": best_rfe_features}),
     "logreg_coefficients.csv": logreg_coefficients,
     "gradient_boosting_importance.csv": grad_importance,
     "random_forest_importance.csv": forest_importance,
     "logreg_coefficients_final.csv": logreg_coefficients_final,
-    "logreg_results_final.csv": logreg_results_final,
+    "logreg_results_final.csv": pd.DataFrame({"logreg_results_final": [logreg_results_final]}),
     "baseline_accuracy.csv": pd.DataFrame({"baseline_accuracy": [baseline_accuracy]})
 }
 

@@ -1,5 +1,5 @@
 Model,Best parameters,CV score
-Logistic Regression,"{'C': np.float64(0.31622776601683794), 'penalty': 'l1'}",0.777
-KNN,"{'metric': 'euclidean', 'n_neighbors': 1, 'weights': 'uniform'}",0.804
-Random Forest,"{'max_depth': 5, 'min_samples_leaf': 2, 'min_samples_split': 10, 'n_estimators': 300}",0.763
-Gradient Boost,"{'learning_rate': 0.1, 'n_estimators': 25}",0.792
+Logistic Regression,{'C': np.float64(0.13894954943731375)},0.833
+KNN,"{'metric': 'manhattan', 'n_neighbors': 12, 'weights': 'distance'}",0.804
+Random Forest,"{'max_depth': 7, 'min_samples_leaf': 2, 'min_samples_split': 5, 'n_estimators': 100}",0.789
+Gradient Boost,"{'learning_rate': 0.1, 'n_estimators': 25}",0.754

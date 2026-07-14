@@ -1,0 +1,3 @@
+logreg_results_final
+"{'accuracy': 0.7777777777777778, 'precision': 0.8666666666666667, 'recall': 0.6842105263157895, 'f1': 0.7647058823529411, 'confusion_matrix': array([[15,  2],
+       [ 6, 13]]), 'classification_report': {'0.0': {'precision': 0.7142857142857143, 'recall': 0.8823529411764706, 'f1-score': 0.7894736842105263, 'support': 17.0}, '1.0': {'precision': 0.8666666666666667, 'recall': 0.6842105263157895, 'f1-score': 0.7647058823529411, 'support': 19.0}, 'accuracy': 0.7777777777777778, 'macro avg': {'precision': 0.7904761904761906, 'recall': 0.78328173374613, 'f1-score': 0.7770897832817337, 'support': 36.0}, 'weighted avg': {'precision': 0.7947089947089947, 'recall': 0.7777777777777778, 'f1-score': 0.7764017887856897, 'support': 36.0}}}"

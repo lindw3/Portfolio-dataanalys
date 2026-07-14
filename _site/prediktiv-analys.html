@@ -138,13 +138,14 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#k-nearest-neighbors" id="toc-k-nearest-neighbors" class="nav-link" data-scroll-target="#k-nearest-neighbors">K-Nearest-Neighbors</a></li>
   <li><a href="#random-forest" id="toc-random-forest" class="nav-link" data-scroll-target="#random-forest">Random Forest</a></li>
   <li><a href="#stacking-classifier" id="toc-stacking-classifier" class="nav-link" data-scroll-target="#stacking-classifier">Stacking Classifier</a></li>
-  <li><a href="#sammanfattning-av-resultaten" id="toc-sammanfattning-av-resultaten" class="nav-link" data-scroll-target="#sammanfattning-av-resultaten">Sammanfattning av resultaten</a></li>
+  <li><a href="#resultat" id="toc-resultat" class="nav-link" data-scroll-target="#resultat">Resultat</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#vidareutveckling-av-den-optimala-modellen" id="toc-vidareutveckling-av-den-optimala-modellen" class="nav-link" data-scroll-target="#vidareutveckling-av-den-optimala-modellen">Vidareutveckling av den optimala modellen</a>
+  <li><a href="#optimering-av-den-bästa-modellen" id="toc-optimering-av-den-bästa-modellen" class="nav-link" data-scroll-target="#optimering-av-den-bästa-modellen">Optimering av den bästa modellen</a>
   <ul class="collapse">
   <li><a href="#rfe-analys" id="toc-rfe-analys" class="nav-link" data-scroll-target="#rfe-analys">RFE-analys</a></li>
-  <li><a href="#reducerad-modell" id="toc-reducerad-modell" class="nav-link" data-scroll-target="#reducerad-modell">Reducerad modell</a></li>
+  <li><a href="#resultat-1" id="toc-resultat-1" class="nav-link" data-scroll-target="#resultat-1">Resultat</a></li>
+  <li><a href="#slutsats" id="toc-slutsats" class="nav-link" data-scroll-target="#slutsats">Slutsats</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -173,23 +174,21 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="frågeställning" class="level1">
 <h1>Frågeställning</h1>
-<p>Hur bra kan en maskininlärningsmodell förutse vilka länder som är demokratier utifrån tillgängliga data över samhällsindikatorer?</p>
+<p>Till vilken grad kan man förutse vilka länder som är demokratier utifrån tillgängliga data över samhällsindikatorer?</p>
 </section>
 <section id="databearbetning" class="level1">
 <h1>Databearbetning</h1>
 <p>Analyserna är gjorda för 2021, då detta år var det år där flest länder hade tillgängliga data för de variabler som analyserades (totalt 343 länder).</p>
-<p>Först så …</p>
-<p>Hantering av NaN</p>
-<p>Bortfallshantering (exkludering av variabler/länder + imputering)</p>
-<p>Standardisering av data</p>
+<p>Som komplement till variablerna i databasen adderades kategoriska data över vilka länder som kategoriserats som demokratier respektive autokratier utifrån en sammanställning från Our World in Data. I detta underlag var uppdelningen mellan demokratier och autokratier nära 50/50, vilket innebar att det inte ansågs nödvändigt att använda någon metod för att “jämna ut” de två kategorierna.</p>
+<p>Därefter exkluderades alla länder som saknade data över huruvida landet var en demokrati eller autokrati, vilket innebar att 179 länder återstod i analysen. Variabeln demokratiindex exkluderades från analysen då det är ett mått som indirekt estimerar målvariabeln. Human Development Index (HDI) togs även bort som variabel då det är en “samlingsvariabel” för utbildning, livslängd och GDP per capita - mått som redan finns med som självständiga variabler i analysen. Därefter exkluderades samtliga variabler som saknade data för 25+ procent av de länder som återstod, vilket innebar att 17 variabler återstod i analysen. För att samtliga variabler skulle kunna användas i regressionsmodellen genomfördes sedan en imputering av resterande saknade värden, där saknade värden tillgavs medianvärdet för respektive variabel. Slutligen standardiserades alla responsvariabler då de skilde sig åt i storleken på värden, där vissa värden var mellan 0-1 och andra uppgick till tiotals tusen.</p>
 </section>
 <section id="prediktion-med-maskininlärningsmodeller" class="level1">
 <h1>Prediktion med maskininlärningsmodeller</h1>
 <section id="metod" class="level2">
 <h2 class="anchored" data-anchor-id="metod">Metod</h2>
-<p>80/20 träningsdata/testdata</p>
-<p>Förklara hur och varför indelningen av X_train, y_train m.m. sker och hur jämförelser sedan görs utifrån respektive modell.</p>
-<p>KFold &amp; GridSearchCV (särskilt bra med mindre datapunkter för att köra flera iterationer?)</p>
+<p>Underlaget delades in i tränings- och testdata, där 20 procent av alla data användes som testdata. Efter att maskininlärningsmodellerna tränats på träningsdatan användes testdatan för att testa hur väl de olika modellerna lyckades predicera huruvida respektive land var en demokrati eller autokrati.</p>
+<p>För att förbättra modellernas tillförlitlighet användes Stratifierad K-Fold som metod, vilket innebär att man delar upp tränings- och testdatan i flera delar (fem delar valdes i detta projekt) utifrån den valda fördelningen för att utvärdera modellen på flera uppdelningar, vilket minskar risken för att resultatet påverkas av en enda slumpmässig indelning.</p>
+<p>För att optimera modellerna användes även GridSearchCV, vilket är en metod för att automatisera optimeringen av parametrar för varje maskininlärningsmodell, där olika kombinationer av parametrar testas för att bestämma vilken parameterkombination som skapar den bästa modellen.</p>
 <section id="logistisk-regression" class="level3">
 <h3 class="anchored" data-anchor-id="logistisk-regression">Logistisk regression</h3>
 <p>Vad? Varför? Hur?</p>
@@ -210,9 +209,10 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="stacking-classifier">Stacking Classifier</h3>
 <p>Vad? Varför? Hur?</p>
 </section>
-<section id="sammanfattning-av-resultaten" class="level3">
-<h3 class="anchored" data-anchor-id="sammanfattning-av-resultaten">Sammanfattning av resultaten</h3>
-<div id="19b7917a" class="cell" data-execution_count="2">
+<section id="resultat" class="level3">
+<h3 class="anchored" data-anchor-id="resultat">Resultat</h3>
+<p>En sammanfattning av resultaten från respektive modell presenteras nedan. Resultaten presenteras utifrån modellernas CV-score, vilket mäter den genomsnittliga mätprecisionen över flera valideringsuppdelningar av träningsdatan. Detta ger en stabilare uppskattning av modellens generaliseringsförmåga.</p>
+<div id="db4e4a40" class="cell" data-execution_count="2">
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -221,53 +221,35 @@ ul.task-list li input[type="checkbox"] {
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">model</th>
-<th data-quarto-table-cell-role="th">Accuracy</th>
-<th data-quarto-table-cell-role="th">Precision</th>
-<th data-quarto-table-cell-role="th">Recall</th>
-<th data-quarto-table-cell-role="th">F1</th>
+<th data-quarto-table-cell-role="th">Model</th>
+<th data-quarto-table-cell-role="th">Mean CV accuracy</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
 <td>Logistic Regression</td>
-<td>0.944444</td>
-<td>0.947368</td>
-<td>0.947368</td>
-<td>0.947368</td>
+<td>0.833</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
-<td>Random Forest</td>
-<td>0.861111</td>
-<td>0.850000</td>
-<td>0.894737</td>
-<td>0.871795</td>
+<td>KNN</td>
+<td>0.804</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
-<td>KNN</td>
-<td>0.750000</td>
-<td>0.750000</td>
-<td>0.789474</td>
-<td>0.769231</td>
+<td>Random Forest</td>
+<td>0.789</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">3</th>
-<td>Gradient Boosting</td>
-<td>0.833333</td>
-<td>0.842105</td>
-<td>0.842105</td>
-<td>0.842105</td>
+<td>Gradient Boost</td>
+<td>0.754</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">4</th>
 <td>Stacking</td>
-<td>0.916667</td>
-<td>0.900000</td>
-<td>0.947368</td>
-<td>0.923077</td>
+<td>0.761</td>
 </tr>
 </tbody>
 </table>
@@ -275,7 +257,9 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<div id="0aa22df4" class="cell" data-execution_count="3">
+<p>Av alla modeller var det logistisk regression som presterade bäst. Detta kan exempelvis bero på att många av variablerna följer en linjär kurva, eller att underlaget är så pass litet att det är svårt för de mer avancerade modellerna att hitta komplexa samband utan att påverkas av variation i datan, och att den enklare modellen då presterar bättre.</p>
+<p>I den bäst presterande modellen (logistik regression) såg koefficienterna ut enligt nedan, sorterat i storleksordning. Eftersom underlaget är standardiserat går de att jämföra med varandra, och kan tolkas som ett mått på hur mycket oddset för att klassificeras som en demokrati förändras när en prediktor ökar med en standardavvikelse, givet att övriga variabler hålls konstanta.</p>
+<div id="53ea9cf4" class="cell" data-execution_count="3">
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
@@ -293,104 +277,104 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
 <td>korruption_index</td>
-<td>-1.211614</td>
-<td>1.211614</td>
+<td>-0.949908</td>
+<td>0.949908</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
-<td>energi_percapita</td>
-<td>-0.523747</td>
-<td>0.523747</td>
+<td>statligautgifter_andel_bnp</td>
+<td>0.478844</td>
+<td>0.478844</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
-<td>statligautgifter_andel_bnp</td>
-<td>0.469879</td>
-<td>0.469879</td>
+<td>handel_andel_gdp</td>
+<td>-0.360076</td>
+<td>0.360076</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">3</th>
-<td>handel_andel_gdp</td>
-<td>-0.299364</td>
-<td>0.299364</td>
+<td>barn_per_kvinna</td>
+<td>-0.354370</td>
+<td>0.354370</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">4</th>
-<td>barn_per_kvinna</td>
-<td>-0.249664</td>
-<td>0.249664</td>
+<td>co2_percapita</td>
+<td>-0.334985</td>
+<td>0.334985</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">5</th>
 <td>livstillfredsställelse</td>
-<td>0.243288</td>
-<td>0.243288</td>
+<td>0.334624</td>
+<td>0.334624</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">6</th>
-<td>skatt_andel_bnp</td>
-<td>0.158603</td>
-<td>0.158603</td>
+<td>andel_kvinnor_arbete</td>
+<td>0.295103</td>
+<td>0.295103</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">7</th>
-<td>co2_percapita</td>
-<td>-0.003788</td>
-<td>0.003788</td>
+<td>energi_percapita</td>
+<td>-0.238946</td>
+<td>0.238946</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">8</th>
-<td>livslängd</td>
-<td>0.000000</td>
-<td>0.000000</td>
+<td>skatt_andel_bnp</td>
+<td>0.219466</td>
+<td>0.219466</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">9</th>
-<td>skolår</td>
-<td>0.000000</td>
-<td>0.000000</td>
+<td>fetma_andel</td>
+<td>0.196592</td>
+<td>0.196592</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">10</th>
-<td>andel_kvinnor_arbete</td>
-<td>0.000000</td>
-<td>0.000000</td>
+<td>mord_percapita</td>
+<td>0.186017</td>
+<td>0.186017</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">11</th>
 <td>utbildning_andel_gdp</td>
-<td>0.000000</td>
-<td>0.000000</td>
+<td>0.137091</td>
+<td>0.137091</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">12</th>
-<td>suicid/100k</td>
-<td>0.000000</td>
-<td>0.000000</td>
+<td>gdp_per_capita</td>
+<td>-0.094531</td>
+<td>0.094531</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">13</th>
-<td>fetma_andel</td>
-<td>0.000000</td>
-<td>0.000000</td>
+<td>död_i_konflikt_percapita</td>
+<td>-0.079430</td>
+<td>0.079430</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">14</th>
-<td>gdp_per_capita</td>
-<td>0.000000</td>
-<td>0.000000</td>
+<td>livslängd</td>
+<td>0.054875</td>
+<td>0.054875</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">15</th>
-<td>mord_percapita</td>
-<td>0.000000</td>
-<td>0.000000</td>
+<td>skolår</td>
+<td>-0.036038</td>
+<td>0.036038</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">16</th>
-<td>död_i_konflikt_percapita</td>
-<td>0.000000</td>
-<td>0.000000</td>
+<td>suicid/100k</td>
+<td>-0.024193</td>
+<td>0.024193</td>
 </tr>
 </tbody>
 </table>
@@ -401,30 +385,33 @@ ul.task-list li input[type="checkbox"] {
 </section>
 </section>
 </section>
-<section id="vidareutveckling-av-den-optimala-modellen" class="level1">
-<h1>Vidareutveckling av den optimala modellen</h1>
-<p>Nästa steg var att försöka optimera den bästa modellen (logreg) för att hitta den modell med så få variabler som möjligt, för att försöka hitta de variabler som är viktigast för att ge samma prediktionsförmåga som modellen som helhet.</p>
+<section id="optimering-av-den-bästa-modellen" class="level1">
+<h1>Optimering av den bästa modellen</h1>
+<p>Nästa steg var att försöka optimera den bästa modellen (logistisk regression) för att hitta den modell med så få variabler som möjligt, för att försöka hitta de variabler som är viktigast för att ge samma prediktionsförmåga som modellen som helhet.</p>
 <section id="rfe-analys" class="level2">
 <h2 class="anchored" data-anchor-id="rfe-analys">RFE-analys</h2>
-<div id="fd474c59" class="cell" data-execution_count="4">
+<p>För att göra denna optimeringen applicerades metoden Recursive Feature Elimination (RFE), vilket återkommande tränar om modellen efter att ha tagit bort den den minst viktiga variabeln för att identifierar de mest informativa variablerna som samtidigt optimerar modellens prediktiva förmåga.</p>
+<p>Nedan presenteras en figur som illustrerar modellens Accuracy-score när den använde mellan 3-17 variabler i analysen.</p>
+<div id="50ca1cc6" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="prediktiv-analys_files/figure-html/cell-5-output-1.png" width="681" height="453" class="figure-img"></p>
+<p><img src="prediktiv-analys_files/figure-html/cell-5-output-1.png" width="673" height="453" class="figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="4778e093" class="cell" data-execution_count="5">
+<p>Ur RFE-analysen framkom att modellen presterade bäst när följande {best_n_features} variabler inkluderades:</p>
+<div id="65f3a8a3" class="cell" data-execution_count="5">
 <div class="cell-output cell-output-display" data-execution_count="5">
-<pre><code>"['co2_percapita', 'energi_percapita', 'skatt_andel_bnp', 'statligautgifter_andel_bnp', 'handel_andel_gdp', 'livstillfredsställelse', 'barn_per_kvinna', 'korruption_index']"</code></pre>
+<pre><code>"['co2_percapita', 'statligautgifter_andel_bnp', 'handel_andel_gdp', 'livstillfredsställelse', 'korruption_index']"</code></pre>
 </div>
 </div>
 </section>
-<section id="reducerad-modell" class="level2">
-<h2 class="anchored" data-anchor-id="reducerad-modell">Reducerad modell</h2>
-<p>En modell med dessa åtta variabler hade den bästa prediktionsförmågan av vilka länder som var demokratier 2021. De är rangordnade utifrån…</p>
-<div id="9054eb07" class="cell" data-execution_count="6">
+<section id="resultat-1" class="level2">
+<h2 class="anchored" data-anchor-id="resultat-1">Resultat</h2>
+<p>En logistisk regressionsmodell med dessa {best_n_features} variabler hade den bästa prediktionsförmågan av vilka länder som var demokratier 2021. De är rangordnade utifrån storleken på variablernas koefficienter.</p>
+<div id="bba21cd2" class="cell" data-execution_count="6">
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
 
@@ -442,50 +429,32 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <th data-quarto-table-cell-role="th">0</th>
 <td>korruption_index</td>
-<td>-1.385110</td>
-<td>1.385110</td>
+<td>-2.093554</td>
+<td>2.093554</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">1</th>
 <td>statligautgifter_andel_bnp</td>
-<td>0.694908</td>
-<td>0.694908</td>
+<td>1.338240</td>
+<td>1.338240</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">2</th>
-<td>energi_percapita</td>
-<td>-0.565511</td>
-<td>0.565511</td>
+<td>co2_percapita</td>
+<td>-1.270246</td>
+<td>1.270246</td>
 </tr>
 <tr class="even">
 <th data-quarto-table-cell-role="th">3</th>
-<td>handel_andel_gdp</td>
-<td>-0.521053</td>
-<td>0.521053</td>
+<td>livstillfredsställelse</td>
+<td>1.052315</td>
+<td>1.052315</td>
 </tr>
 <tr class="odd">
 <th data-quarto-table-cell-role="th">4</th>
-<td>livstillfredsställelse</td>
-<td>0.510181</td>
-<td>0.510181</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">5</th>
-<td>barn_per_kvinna</td>
-<td>-0.389491</td>
-<td>0.389491</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">6</th>
-<td>co2_percapita</td>
-<td>-0.382465</td>
-<td>0.382465</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">7</th>
-<td>skatt_andel_bnp</td>
-<td>0.221615</td>
-<td>0.221615</td>
+<td>handel_andel_gdp</td>
+<td>-0.977180</td>
+<td>0.977180</td>
 </tr>
 </tbody>
 </table>
@@ -493,6 +462,33 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+<div id="b2f31a17" class="cell" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">logreg_results_final</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>{'accuracy': 0.7777777777777778, 'precision': ...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="slutsats" class="level2">
+<h2 class="anchored" data-anchor-id="slutsats">Slutsats</h2>
+<p>Utifrån kännedom om länders (ange variablerna) kunde en maskininlärningsmodell förutse vilka länder som var demokratier eller autokratier med XX procents träffsäkerhet.</p>
 
 
 </section>

@@ -1,0 +1,6 @@
+Model,Mean CV accuracy
+Logistic Regression,0.833
+KNN,0.804
+Random Forest,0.789
+Gradient Boost,0.754
+Stacking,0.761

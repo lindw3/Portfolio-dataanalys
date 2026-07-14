@@ -4,21 +4,21 @@
     "href": "prediktiv-analys.html",
     "title": "Prediktiv analys",
     "section": "",
-    "text": "Hur bra kan en maskininlärningsmodell förutse vilka länder som är demokratier utifrån tillgängliga data över samhällsindikatorer?"
+    "text": "Till vilken grad kan man förutse vilka länder som är demokratier utifrån tillgängliga data över samhällsindikatorer?"
   },
   {
     "objectID": "prediktiv-analys.html#metod",
     "href": "prediktiv-analys.html#metod",
     "title": "Prediktiv analys",
     "section": "Metod",
-    "text": "Metod\n80/20 träningsdata/testdata\nFörklara hur och varför indelningen av X_train, y_train m.m. sker och hur jämförelser sedan görs utifrån respektive modell.\nKFold & GridSearchCV (särskilt bra med mindre datapunkter för att köra flera iterationer?)\n\nLogistisk regression\nVad? Varför? Hur?\n\n\nGradient Boosting Tree\nVad? Varför? Hur?\n\n\nK-Nearest-Neighbors\nVad? Varför? Hur?\n\n\nRandom Forest\nVad? Varför? Hur?\n\n\nStacking Classifier\nVad? Varför? Hur?\n\n\nSammanfattning av resultaten\n\n\n\n\n\n\n\n\n\nmodel\nAccuracy\nPrecision\nRecall\nF1\n\n\n\n\n0\nLogistic Regression\n0.944444\n0.947368\n0.947368\n0.947368\n\n\n1\nRandom Forest\n0.861111\n0.850000\n0.894737\n0.871795\n\n\n2\nKNN\n0.750000\n0.750000\n0.789474\n0.769231\n\n\n3\nGradient Boosting\n0.833333\n0.842105\n0.842105\n0.842105\n\n\n4\nStacking\n0.916667\n0.900000\n0.947368\n0.923077\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nfeature\ncoefficient\nabs_coef\n\n\n\n\n0\nkorruption_index\n-1.211614\n1.211614\n\n\n1\nenergi_percapita\n-0.523747\n0.523747\n\n\n2\nstatligautgifter_andel_bnp\n0.469879\n0.469879\n\n\n3\nhandel_andel_gdp\n-0.299364\n0.299364\n\n\n4\nbarn_per_kvinna\n-0.249664\n0.249664\n\n\n5\nlivstillfredsställelse\n0.243288\n0.243288\n\n\n6\nskatt_andel_bnp\n0.158603\n0.158603\n\n\n7\nco2_percapita\n-0.003788\n0.003788\n\n\n8\nlivslängd\n0.000000\n0.000000\n\n\n9\nskolår\n0.000000\n0.000000\n\n\n10\nandel_kvinnor_arbete\n0.000000\n0.000000\n\n\n11\nutbildning_andel_gdp\n0.000000\n0.000000\n\n\n12\nsuicid/100k\n0.000000\n0.000000\n\n\n13\nfetma_andel\n0.000000\n0.000000\n\n\n14\ngdp_per_capita\n0.000000\n0.000000\n\n\n15\nmord_percapita\n0.000000\n0.000000\n\n\n16\ndöd_i_konflikt_percapita\n0.000000\n0.000000"
+    "text": "Metod\nUnderlaget delades in i tränings- och testdata, där 20 procent av alla data användes som testdata. Efter att maskininlärningsmodellerna tränats på träningsdatan användes testdatan för att testa hur väl de olika modellerna lyckades predicera huruvida respektive land var en demokrati eller autokrati.\nFör att förbättra modellernas tillförlitlighet användes Stratifierad K-Fold som metod, vilket innebär att man delar upp tränings- och testdatan i flera delar (fem delar valdes i detta projekt) utifrån den valda fördelningen för att utvärdera modellen på flera uppdelningar, vilket minskar risken för att resultatet påverkas av en enda slumpmässig indelning.\nFör att optimera modellerna användes även GridSearchCV, vilket är en metod för att automatisera optimeringen av parametrar för varje maskininlärningsmodell, där olika kombinationer av parametrar testas för att bestämma vilken parameterkombination som skapar den bästa modellen.\n\nLogistisk regression\nVad? Varför? Hur?\n\n\nGradient Boosting Tree\nVad? Varför? Hur?\n\n\nK-Nearest-Neighbors\nVad? Varför? Hur?\n\n\nRandom Forest\nVad? Varför? Hur?\n\n\nStacking Classifier\nVad? Varför? Hur?\n\n\nResultat\nEn sammanfattning av resultaten från respektive modell presenteras nedan. Resultaten presenteras utifrån modellernas CV-score, vilket mäter den genomsnittliga mätprecisionen över flera valideringsuppdelningar av träningsdatan. Detta ger en stabilare uppskattning av modellens generaliseringsförmåga.\n\n\n\n\n\n\n\n\n\nModel\nMean CV accuracy\n\n\n\n\n0\nLogistic Regression\n0.833\n\n\n1\nKNN\n0.804\n\n\n2\nRandom Forest\n0.789\n\n\n3\nGradient Boost\n0.754\n\n\n4\nStacking\n0.761\n\n\n\n\n\n\n\nAv alla modeller var det logistisk regression som presterade bäst. Detta kan exempelvis bero på att många av variablerna följer en linjär kurva, eller att underlaget är så pass litet att det är svårt för de mer avancerade modellerna att hitta komplexa samband utan att påverkas av variation i datan, och att den enklare modellen då presterar bättre.\nI den bäst presterande modellen (logistik regression) såg koefficienterna ut enligt nedan, sorterat i storleksordning. Eftersom underlaget är standardiserat går de att jämföra med varandra, och kan tolkas som ett mått på hur mycket oddset för att klassificeras som en demokrati förändras när en prediktor ökar med en standardavvikelse, givet att övriga variabler hålls konstanta.\n\n\n\n\n\n\n\n\n\nfeature\ncoefficient\nabs_coef\n\n\n\n\n0\nkorruption_index\n-0.949908\n0.949908\n\n\n1\nstatligautgifter_andel_bnp\n0.478844\n0.478844\n\n\n2\nhandel_andel_gdp\n-0.360076\n0.360076\n\n\n3\nbarn_per_kvinna\n-0.354370\n0.354370\n\n\n4\nco2_percapita\n-0.334985\n0.334985\n\n\n5\nlivstillfredsställelse\n0.334624\n0.334624\n\n\n6\nandel_kvinnor_arbete\n0.295103\n0.295103\n\n\n7\nenergi_percapita\n-0.238946\n0.238946\n\n\n8\nskatt_andel_bnp\n0.219466\n0.219466\n\n\n9\nfetma_andel\n0.196592\n0.196592\n\n\n10\nmord_percapita\n0.186017\n0.186017\n\n\n11\nutbildning_andel_gdp\n0.137091\n0.137091\n\n\n12\ngdp_per_capita\n-0.094531\n0.094531\n\n\n13\ndöd_i_konflikt_percapita\n-0.079430\n0.079430\n\n\n14\nlivslängd\n0.054875\n0.054875\n\n\n15\nskolår\n-0.036038\n0.036038\n\n\n16\nsuicid/100k\n-0.024193\n0.024193"
   },
   {
     "objectID": "prediktiv-analys.html#rfe-analys",
     "href": "prediktiv-analys.html#rfe-analys",
     "title": "Prediktiv analys",
     "section": "RFE-analys",
-    "text": "RFE-analys\n\n\n\n\n\n\n\n\n\n\n\n\"['co2_percapita', 'energi_percapita', 'skatt_andel_bnp', 'statligautgifter_andel_bnp', 'handel_andel_gdp', 'livstillfredsställelse', 'barn_per_kvinna', 'korruption_index']\""
+    "text": "RFE-analys\nFör att göra denna optimeringen applicerades metoden Recursive Feature Elimination (RFE), vilket återkommande tränar om modellen efter att ha tagit bort den den minst viktiga variabeln för att identifierar de mest informativa variablerna som samtidigt optimerar modellens prediktiva förmåga.\nNedan presenteras en figur som illustrerar modellens Accuracy-score när den använde mellan 3-17 variabler i analysen.\n\n\n\n\n\n\n\n\n\nUr RFE-analysen framkom att modellen presterade bäst när följande {best_n_features} variabler inkluderades:\n\n\n\"['co2_percapita', 'statligautgifter_andel_bnp', 'handel_andel_gdp', 'livstillfredsställelse', 'korruption_index']\""
   },
   {
     "objectID": "prediktiv-analys.html#reducerad-modell",
@@ -124,5 +124,19 @@
     "title": "Multipel regression",
     "section": "Slutlig modell",
     "text": "Slutlig modell\nDen slutliga modellen innehöll fem variabler som är associerade med demokratiindex när andra variabler hålls konstanta:\n\n\n\n\n\n\n\n\n\nOberoende variabel\nAntal observationer\nR-squared\nAdj. R-squared\nF-statistic\nProb (F-statistic)\nAIC\nBIC\n\n\n\n\n0\ndemokratiindex\n135\n0.683\n0.67\n95.29\n0.0\n-136.448\n-119.017\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nKoefficient\nStandardfel\nz\nP&gt;|z|\n[0.025\n0.975]\n\n\n\n\nco2_percapita\n-0.105\n0.019\n-5.413\n0.000\n-0.143\n-0.067\n\n\nstatligautgifter_andel_bnp\n0.042\n0.018\n2.317\n0.021\n0.007\n0.078\n\n\nlivstillfredsställelse\n0.066\n0.018\n3.688\n0.000\n0.031\n0.102\n\n\nbarn_per_kvinna\n-0.031\n0.015\n-2.009\n0.045\n-0.061\n-0.001\n\n\nkorruption_index\n-0.143\n0.019\n-7.519\n0.000\n-0.180\n-0.106"
+  },
+  {
+    "objectID": "prediktiv-analys.html#resultat-1",
+    "href": "prediktiv-analys.html#resultat-1",
+    "title": "Prediktiv analys",
+    "section": "Resultat",
+    "text": "Resultat\nEn logistisk regressionsmodell med dessa {best_n_features} variabler hade den bästa prediktionsförmågan av vilka länder som var demokratier 2021. De är rangordnade utifrån storleken på variablernas koefficienter.\n\n\n\n\n\n\n\n\n\nfeature\ncoefficient\nabs_coef\n\n\n\n\n0\nkorruption_index\n-2.093554\n2.093554\n\n\n1\nstatligautgifter_andel_bnp\n1.338240\n1.338240\n\n\n2\nco2_percapita\n-1.270246\n1.270246\n\n\n3\nlivstillfredsställelse\n1.052315\n1.052315\n\n\n4\nhandel_andel_gdp\n-0.977180\n0.977180\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlogreg_results_final\n\n\n\n\n0\n{'accuracy': 0.7777777777777778, 'precision': ..."
+  },
+  {
+    "objectID": "prediktiv-analys.html#slutsats",
+    "href": "prediktiv-analys.html#slutsats",
+    "title": "Prediktiv analys",
+    "section": "Slutsats",
+    "text": "Slutsats\nUtifrån kännedom om länders (ange variablerna) kunde en maskininlärningsmodell förutse vilka länder som var demokratier eller autokratier med XX procents träffsäkerhet."
   }
 ]

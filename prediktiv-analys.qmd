@@ -23,8 +23,8 @@ logreg_results_final = pd.read_csv(
     "data/results_ml/logreg_results_final.csv"
 )
 
-model_parameters = pd.read_csv(
-    "data/results_ml/model_parameters.csv"
+model_comparison = pd.read_csv(
+    "data/results_ml/model_comparison.csv"
 )
 
 model_summary = pd.read_csv(
@@ -47,15 +47,9 @@ Till vilken grad kan man förutse vilka länder som är demokratier utifrån til
 # Databearbetning
 Analyserna är gjorda för 2021, då detta år var det år där flest länder hade tillgängliga data för de variabler som analyserades (totalt 343 länder).
 
-Som komplement till variablerna i databasen adderades kategoriska data över vilka länder som kategoriserats som demokratier respektive autokratier utifrån en sammanställning från Our World in Data.
+Som komplement till variablerna i databasen adderades kategoriska data över vilka länder som kategoriserats som demokratier respektive autokratier utifrån en sammanställning från Our World in Data. I detta underlag var uppdelningen mellan demokratier och autokratier nära 50/50, vilket innebar att det inte ansågs nödvändigt att använda någon metod för att "jämna ut" de två kategorierna.
 
-Först så ...
-
-Hantering av NaN
-
-Bortfallshantering (exkludering av variabler/länder + imputering)
-
-Standardisering av data
+Därefter exkluderades alla länder som saknade data över huruvida landet var en demokrati eller autokrati, vilket innebar att 179 länder återstod i analysen. Variabeln demokratiindex exkluderades från analysen då det är ett mått som indirekt estimerar målvariabeln. Human Development Index (HDI) togs även bort som variabel då det är en "samlingsvariabel" för utbildning, livslängd och GDP per capita - mått som redan finns med som självständiga variabler i analysen. Därefter exkluderades samtliga variabler som saknade data för 25+ procent av de länder som återstod, vilket innebar att 17 variabler återstod i analysen. För att samtliga variabler skulle kunna användas i regressionsmodellen genomfördes sedan en imputering av resterande saknade värden, där saknade värden tillgavs medianvärdet för respektive variabel. Slutligen standardiserades alla responsvariabler då de skilde sig åt i storleken på värden, där vissa värden var mellan 0-1 och andra uppgick till tiotals tusen.
 
 
 
@@ -63,11 +57,11 @@ Standardisering av data
 
 ## Metod
 
-80/20 träningsdata/testdata
+Underlaget delades in i tränings- och testdata, där 20 procent av alla data användes som testdata. Efter att maskininlärningsmodellerna tränats på träningsdatan användes testdatan för att testa hur väl de olika modellerna lyckades predicera huruvida respektive land var en demokrati eller autokrati.
 
-Förklara hur och varför indelningen av X_train, y_train m.m. sker och hur jämförelser sedan görs utifrån respektive modell.
+För att förbättra modellernas tillförlitlighet användes Stratifierad K-Fold som metod, vilket innebär att man delar upp tränings- och testdatan i flera delar (fem delar valdes i detta projekt) utifrån den valda fördelningen för att utvärdera modellen på flera uppdelningar, vilket minskar risken för att resultatet påverkas av en enda slumpmässig indelning.
 
-KFold & GridSearchCV (särskilt bra med mindre datapunkter för att köra flera iterationer?)
+För att optimera modellerna användes även GridSearchCV, vilket är en metod för att automatisera optimeringen av parametrar för varje maskininlärningsmodell, där olika kombinationer av parametrar testas för att bestämma vilken parameterkombination som skapar den bästa modellen.
 
 
 ### Logistisk regression
@@ -85,11 +79,17 @@ Vad? Varför? Hur?
 ### Stacking Classifier
 Vad? Varför? Hur?
 
-### Sammanfattning av resultaten
+### Resultat
+
+En sammanfattning av resultaten från respektive modell presenteras nedan. Resultaten presenteras utifrån modellernas CV-score, vilket mäter den genomsnittliga mätprecisionen över flera valideringsuppdelningar av träningsdatan. Detta ger en stabilare uppskattning av modellens generaliseringsförmåga.
 
 ```{python}
-model_summary
+model_comparison
 ```
+
+Av alla modeller var det logistisk regression som presterade bäst. Detta kan exempelvis bero på att många av variablerna följer en linjär kurva, eller att underlaget är så pass litet att det är svårt för de mer avancerade modellerna att hitta komplexa samband utan att påverkas av variation i datan, och att den enklare modellen då presterar bättre.
+
+I den bäst presterande modellen (logistik regression) såg koefficienterna ut enligt nedan, sorterat i storleksordning. Eftersom underlaget är standardiserat går de att jämföra med varandra, och kan tolkas som ett mått på hur mycket oddset för att klassificeras som en demokrati förändras när en prediktor ökar med en standardavvikelse, givet att övriga variabler hålls konstanta.
 
 ```{python}
 logreg_coefficients
@@ -97,43 +97,50 @@ logreg_coefficients
 
 
 
-# Optimering av den bästa modellen
+# Reducering av den bästa modellen
 
 Nästa steg var att försöka optimera den bästa modellen (logistisk regression) för att hitta den modell med så få variabler som möjligt, för att försöka hitta de variabler som är viktigast för att ge samma prediktionsförmåga som modellen som helhet.
 
 ## RFE-analys
+För att göra denna optimeringen applicerades metoden Recursive Feature Elimination (RFE), vilket återkommande tränar om modellen efter att ha tagit bort den den minst viktiga variabeln för att identifierar de mest informativa variablerna som samtidigt optimerar modellens prediktiva förmåga.
+
+Nedan presenteras en figur som illustrerar modellens Accuracy-score när den använde mellan 3-17 variabler i analysen.
 
 ```{python}
 fig_rfe, ax_rfe = plt.subplots(figsize=(8, 5))
 
 ax_rfe.errorbar(
     rfe_summary["n_features"],
-    rfe_summary["cv_f1_mean"],
-    yerr=rfe_summary["cv_f1_std"],
+    rfe_summary["cv_accuracy_mean"],
+    yerr=rfe_summary["cv_accuracy_std"],
     marker="o"
 )
 
 ax_rfe.set_xlabel("Antal variabler")
-ax_rfe.set_ylabel("Cross-validation F1")
-ax_rfe.set_title("RFE: F1-score beroende på antal variabler")
+ax_rfe.set_ylabel("Cross-validation Accuracy")
+ax_rfe.set_title("RFE: Accuracy score beroende på antal variabler")
 
 ax_rfe.set_xticks(
     rfe_summary["n_features"]
 )
 ```
 
+Ur RFE-analysen framkom att modellen presterade bäst när följande {best_n_features} variabler inkluderades:
+
+
+
 ```{python}
 
 rfe_summary.loc[
-        rfe_summary["cv_f1_mean"].idxmax(),
+        rfe_summary["cv_accuracy_mean"].idxmax(),
         "features"
     ]
 
 ```
 
 
-## Reducerad modell
-En modell med dessa åtta variabler hade den bästa prediktionsförmågan av vilka länder som var demokratier 2021. De är rangordnade utifrån...
+## Resultat
+En logistisk regressionsmodell med dessa {best_n_features} variabler hade den bästa prediktionsförmågan av vilka länder som var demokratier 2021. De är rangordnade utifrån storleken på variablernas koefficienter.
 
 ```{python}
 logreg_coefficients_final
@@ -144,4 +151,4 @@ logreg_results_final
 ```
 
 ## Slutsats
-Utifrån kännedom om länders (ange variablerna) kunde en maskininlärningsmodell förutse vilka länder som var demokratier eller autokratier till 
+Utifrån kännedom om länders (ange variablerna) kunde en maskininlärningsmodell förutse vilka länder som var demokratier eller autokratier med XX procents träffsäkerhet.
