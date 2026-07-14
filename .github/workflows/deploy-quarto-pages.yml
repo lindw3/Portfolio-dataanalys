@@ -22,7 +22,8 @@ jobs:
       - name: Render site
         uses: quarto-dev/quarto-actions/render@v2
         with:
-          command: quarto render --no-preview
+          path: .
+          to: html
 
       - name: Configure Pages
         uses: actions/configure-pages@v3
