@@ -23,6 +23,10 @@ logreg_results_final = pd.read_csv(
     "data/results_ml/logreg_results_final.csv"
 )
 
+logreg_final_summary = pd.read_csv(
+    "data/results_ml/logreg_final_summary.csv"
+)
+
 model_comparison = pd.read_csv(
     "data/results_ml/model_comparison.csv"
 )
@@ -39,19 +43,25 @@ rfe_summary = pd.read_csv(
     "data/results_ml/rfe_summary.csv"
 )
 
+best_n_features = rfe_summary["n_features"].iloc[0]
+
+best_rfe_features = pd.read_csv(
+    "data/results_ml/best_rfe_features.csv"
+)
+
 ```
 
-# Frågeställning
-Till vilken grad kan man förutse vilka länder som är demokratier utifrån tillgängliga data över samhällsindikatorer?
+## Frågeställning
+I vilken utsträckning kan ett lands demokratiska styrelseskick förutsägas utifrån ett antal samhällsindikatorer?
 
-# Databearbetning
-Analyserna är gjorda för 2021, då detta år var det år där flest länder hade tillgängliga data för de variabler som analyserades (totalt 343 länder).
+## Databearbetning
+Analyserna genomfördes för år 2021, eftersom detta var det år då flest länder hade tillgängliga värden för de inkluderade samhällsindikatorerna.
 
-Som komplement till variablerna i databasen adderades kategoriska data över vilka länder som kategoriserats som demokratier respektive autokratier utifrån en sammanställning från Our World in Data. I detta underlag var uppdelningen mellan demokratier och autokratier nära 50/50, vilket innebar att det inte ansågs nödvändigt att använda någon metod för att "jämna ut" de två kategorierna.
+Som målvariabel användes en binär klassificering av länder som demokratier respektive autokratier baserad på Our World in Data. Efter att länder med saknad information om styrelseskick exkluderats återstod 179 länder. Klassen var ungefär jämnt fördelad mellan demokratier och autokratier, vilket innebar att ingen balansering av klasserna bedömdes vara nödvändig.
 
-Därefter exkluderades alla länder som saknade data över huruvida landet var en demokrati eller autokrati, vilket innebar att 179 länder återstod i analysen. Variabeln demokratiindex exkluderades från analysen då det är ett mått som indirekt estimerar målvariabeln. Human Development Index (HDI) togs även bort som variabel då det är en "samlingsvariabel" för utbildning, livslängd och GDP per capita - mått som redan finns med som självständiga variabler i analysen. Därefter exkluderades samtliga variabler som saknade data för 25+ procent av de länder som återstod, vilket innebar att 17 variabler återstod i analysen. För att samtliga variabler skulle kunna användas i regressionsmodellen genomfördes sedan en imputering av resterande saknade värden, där saknade värden tillgavs medianvärdet för respektive variabel. Slutligen standardiserades alla responsvariabler då de skilde sig åt i storleken på värden, där vissa värden var mellan 0-1 och andra uppgick till tiotals tusen.
+Variabeln *Democracy Index* exkluderades eftersom den direkt mäter det utfall som modellen skulle predicera. *Human Development Index (HDI)* exkluderades också eftersom det är ett sammansatt index som bygger på flera variabler som redan ingick i analysen (utbildningsnivå, förväntad livslängd och BNP per capita).
 
-
+Därefter exkluderades variabler med mer än 25 procent saknade värden, vilket resulterade i 17 återstående prediktorer. Kvarvarande saknade värden imputerades med respektive variabels median. Slutligen standardiserades samtliga prediktorer för att göra variabler med olika skalor jämförbara.
 
 # Prediktion med maskininlärningsmodeller
 
@@ -63,31 +73,33 @@ För att förbättra modellernas tillförlitlighet användes Stratifierad K-Fold
 
 För att optimera modellerna användes även GridSearchCV, vilket är en metod för att automatisera optimeringen av parametrar för varje maskininlärningsmodell, där olika kombinationer av parametrar testas för att bestämma vilken parameterkombination som skapar den bästa modellen.
 
+### Maskininlärningsmodeller
+#### Logistisk regression
+Logistisk regression är en linjär klassificeringsmodell som uppskattar sannolikheten att en observation tillhör en viss klass genom en logistisk funktion. Modellen skattar en koefficient för varje variabel och kombinerar dessa till ett prediktionsvärde. Dess främsta styrka är att den är enkel att tolka och fungerar väl när sambanden mellan prediktorer och utfall är ungefär linjära.
 
-### Logistisk regression
-Vad? Varför? Hur?
+#### Gradient Boosting Tree
+Gradient Boosting bygger successivt upp en modell genom att träna många små beslutsträd där varje nytt träd fokuserar på de observationer som tidigare träd klassificerat fel. Modellen kan fånga komplexa och icke-linjära samband och uppnår ofta hög prediktionsförmåga. Nackdelen är att den är mer beräkningsintensiv och kan vara känsligare för överanpassning.
 
-### Gradient Boosting Tree
-Vad? Varför? Hur?
+#### K-Nearest-Neighbors
+K-Nearest Neighbors klassificerar en observation utifrån vilka observationer som ligger närmast i utifrån de variabler som studeras. Klassen bestäms av majoriteten bland de "närmaste grannarna".
 
-### K-Nearest-Neighbors
-Vad? Varför? Hur?
+#### Random Forest
+Random Forest bygger ett stort antal beslutsträd på olika slumpmässiga delmängder av data och prediktorer. Den slutliga klassificeringen bestäms genom majoritetsröstning mellan träden. Metoden är robust mot brus och kan modellera komplexa samband, samtidigt som den minskar risken för överanpassning jämfört med ett enskilt beslutsträd.
 
-### Random Forest
-Vad? Varför? Hur?
+#### Stacking Classifier
+Stacking kombinerar flera olika maskininlärningsmodeller genom att använda deras prediktioner som indata till en ny modell. Tanken är att olika modeller fångar olika mönster i datan och att en kombination därför kan ge bättre prediktionsförmåga än någon enskild modell. I detta projekt användes en mix av logistisk regression och random forest för att träna modellen, för att sedan använda random forest för att göra prediktionen.
 
-### Stacking Classifier
-Vad? Varför? Hur?
+## Resultat
 
-### Resultat
-
-En sammanfattning av resultaten från respektive modell presenteras nedan. Resultaten presenteras utifrån modellernas CV-score, vilket mäter den genomsnittliga mätprecisionen över flera valideringsuppdelningar av träningsdatan. Detta ger en stabilare uppskattning av modellens generaliseringsförmåga.
+Modellerna jämfördes utifrån deras genomsnittliga accuracy vid femfaldig stratifierad cross-validation (CV-score). Till skillnad från ett enskilt tränings-/testsplit bygger detta mått på flera olika uppdelningar av träningsdatan och ger därför en mer robust uppskattning av modellernas förväntade generaliseringsförmåga.
 
 ```{python}
 model_comparison
 ```
 
-Av alla modeller var det logistisk regression som presterade bäst. Detta kan exempelvis bero på att många av variablerna följer en linjär kurva, eller att underlaget är så pass litet att det är svårt för de mer avancerade modellerna att hitta komplexa samband utan att påverkas av variation i datan, och att den enklare modellen då presterar bättre.
+Logistisk regression uppvisade den högsta genomsnittliga CV-scoren och valdes därför som huvudmodell i den fortsatta analysen.
+
+Att logistisk regression presterade bäst kan bero på flera faktorer. För det första kan sambanden mellan samhällsindikatorerna och ett lands demokratiska styrelseskick till stor del beskrivas med gradvisa, ungefär linjära samband. För det andra är datasetet relativt litet, vilket kan göra det svårare för mer komplexa modeller, såsom Random Forest och Gradient Boosting, att identifiera stabila icke-linjära mönster. En enklare modell kan därför få bättre generaliseringsförmåga.
 
 I den bäst presterande modellen (logistik regression) såg koefficienterna ut enligt nedan, sorterat i storleksordning. Eftersom underlaget är standardiserat går de att jämföra med varandra, och kan tolkas som ett mått på hur mycket oddset för att klassificeras som en demokrati förändras när en prediktor ökar med en standardavvikelse, givet att övriga variabler hålls konstanta.
 
@@ -96,13 +108,12 @@ logreg_coefficients
 ```
 
 
-
-# Reducering av den bästa modellen
+## Reducering av den bästa modellen
 
 Nästa steg var att försöka optimera den bästa modellen (logistisk regression) för att hitta den modell med så få variabler som möjligt, för att försöka hitta de variabler som är viktigast för att ge samma prediktionsförmåga som modellen som helhet.
 
-## RFE-analys
-För att göra denna optimeringen applicerades metoden Recursive Feature Elimination (RFE), vilket återkommande tränar om modellen efter att ha tagit bort den den minst viktiga variabeln för att identifierar de mest informativa variablerna som samtidigt optimerar modellens prediktiva förmåga.
+### RFE-analys
+Recursive Feature Elimination (RFE) användes för att identifiera den minsta uppsättning variabler som bibehöll hög prediktionsförmåga. Metoden tränar modellen upprepade gånger och eliminerar successivt den minst betydelsefulla prediktorn tills önskat antal variabler återstår. För varje antal variabler beräknades den genomsnittliga accuracyn med hjälp av cross-validation.
 
 Nedan presenteras en figur som illustrerar modellens Accuracy-score när den använde mellan 3-17 variabler i analysen.
 
@@ -125,30 +136,24 @@ ax_rfe.set_xticks(
 )
 ```
 
-Ur RFE-analysen framkom att modellen presterade bäst när följande {best_n_features} variabler inkluderades:
+Ur RFE-analysen framkom att modellen presterade bäst när `{python} len(best_rfe_features)` variabler inkluderades.
 
 
 
-```{python}
-
-rfe_summary.loc[
-        rfe_summary["cv_accuracy_mean"].idxmax(),
-        "features"
-    ]
-
-```
-
-
-## Resultat
-En logistisk regressionsmodell med dessa {best_n_features} variabler hade den bästa prediktionsförmågan av vilka länder som var demokratier 2021. De är rangordnade utifrån storleken på variablernas koefficienter.
+### Resultat
+RFE identifierade en reducerad modell med `{python} len(best_rfe_features)` variabler som uppnådde den högsta genomsnittliga accuracyn vid cross-validation. Variablerna och deras koefficienter presenteras nedan.
 
 ```{python}
 logreg_coefficients_final
 ```
 
+När den reducerade modellen applicerades på testdatan lyckades den gissa rätt `{python} round(float(logreg_final_summary.loc[0, "Accuracy"]) * 100, 1)` procent av gångerna. Modellens precision var `{python} round(float(logreg_final_summary.loc[0, "Precision"]) * 100, 1)` procent, medan recall uppgick till `{python} round(float(logreg_final_summary.loc[0, "Recall"]) * 100, 1)` procent. Detta innebär att de länder som modellen klassificerade som demokratier oftast också var demokratier, men att modellen samtidigt missade en relativt stor andel av de faktiska demokratierna. Modellen tenderade därmed att vara försiktig med att klassificera ett land som demokrati.
+
 ```{python}
-logreg_results_final
+logreg_final_summary
 ```
 
-## Slutsats
-Utifrån kännedom om länders (ange variablerna) kunde en maskininlärningsmodell förutse vilka länder som var demokratier eller autokratier med XX procents träffsäkerhet.
+### Slutsats
+Resultaten visar att `{python} len(best_rfe_features)` samhällsindikatorer innehåller betydande information om ett lands demokratiska styrelseskick. Den reducerade logistiska regressionsmodellen uppnådde en genomsnittlig accuracy på `{python} round(float(rfe_summary["cv_accuracy_mean"].max()) * 100, 1)` procent vid cross-validation, vilket indikerar att demokratier och autokratier i stor utsträckning kan särskiljas utifrån de inkluderade variablerna. När modellen därefter utvärderades på det separata testsetet uppnåddes en accuracy på `{python} round(float(logreg_final_summary.loc[0, "Accuracy"]) * 100, 1)` procent.
+
+

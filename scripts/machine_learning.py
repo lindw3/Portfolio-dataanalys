@@ -467,6 +467,17 @@ logreg_results_final = evaluate_model(
     y_test
 )
 
+logreg_final_summary = (
+    pd.DataFrame({
+        "Model": ["Logistic Regression"],
+        "Accuracy": [logreg_results_final["accuracy"]],
+        "Precision": [logreg_results_final["precision"]],
+        "Recall": [logreg_results_final["recall"]],
+        "F1": [logreg_results_final["f1"]]
+    })
+    .round(3)
+)
+
 logreg_coefficients_final = (
     pd.DataFrame({
         "feature": X_train_final.columns,
@@ -503,6 +514,7 @@ exports = {
     "random_forest_importance.csv": forest_importance,
     "logreg_coefficients_final.csv": logreg_coefficients_final,
     "logreg_results_final.csv": pd.DataFrame({"logreg_results_final": [logreg_results_final]}),
+    "logreg_final_summary.csv": logreg_final_summary,
     "baseline_accuracy.csv": pd.DataFrame({"baseline_accuracy": [baseline_accuracy]})
 }
 

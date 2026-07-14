@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Multipel regression – William Lind | Dataanalysportfolio</title>
+<title>Dataanalysportfolio – William Lind | Dataanalysportfolio</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -26,7 +26,7 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -70,9 +70,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="styles.css">
@@ -96,7 +93,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
 <span class="menu-text">Hem</span></a>
   </li>  
   <li class="nav-item">
@@ -104,7 +101,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Explorativ analys</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./multipel-regression.html" aria-current="page"> 
+    <a class="nav-link" href="./multipel-regression.html"> 
 <span class="menu-text">Multipel regressionsanalys</span></a>
   </li>  
   <li class="nav-item">
@@ -127,16 +124,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#frågeställning" id="toc-frågeställning" class="nav-link active" data-scroll-target="#frågeställning">Frågeställning</a></li>
-  <li><a href="#databearbetning" id="toc-databearbetning" class="nav-link" data-scroll-target="#databearbetning">Databearbetning</a></li>
-  <li><a href="#dataanalys" id="toc-dataanalys" class="nav-link" data-scroll-target="#dataanalys">Dataanalys</a>
-  <ul class="collapse">
-  <li><a href="#deskriptiv-modell" id="toc-deskriptiv-modell" class="nav-link" data-scroll-target="#deskriptiv-modell">Deskriptiv modell</a></li>
-  <li><a href="#kontroll-av-multikollinearitet" id="toc-kontroll-av-multikollinearitet" class="nav-link" data-scroll-target="#kontroll-av-multikollinearitet">Kontroll av multikollinearitet</a></li>
-  <li><a href="#reducering-av-variabler" id="toc-reducering-av-variabler" class="nav-link" data-scroll-target="#reducering-av-variabler">Reducering av variabler</a></li>
-  <li><a href="#slutlig-modell" id="toc-slutlig-modell" class="nav-link" data-scroll-target="#slutlig-modell">Slutlig modell</a></li>
-  </ul></li>
-  <li><a href="#resultat" id="toc-resultat" class="nav-link" data-scroll-target="#resultat">Resultat</a></li>
+  <li><a href="#om-projektet" id="toc-om-projektet" class="nav-link active" data-scroll-target="#om-projektet">Om projektet</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  <li><a href="#analysfrågor" id="toc-analysfrågor" class="nav-link" data-scroll-target="#analysfrågor">Analysfrågor</a></li>
   </ul>
 </nav>
     </div>
@@ -145,7 +135,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Multipel regression</h1>
+<h1 class="title">Dataanalysportfolio</h1>
 </div>
 
 
@@ -162,568 +152,28 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="frågeställning" class="level1">
-<h1>Frågeställning</h1>
-<p>Vilka samhällsfaktorer är associerade med demokratiindex?</p>
-</section>
-<section id="databearbetning" class="level1">
-<h1>Databearbetning</h1>
-<p>Analyserna är gjorda för 2021, då detta år var det år där flest länder hade tillgängliga data för de variabler som analyserades (totalt 343 länder).</p>
-<p>Först exkluderades en variabel som helt saknade data för det givna året. Därefter exkluderades samtliga länder som saknade data för 25+ procent av de variabler som återstod, vilket innebar att 135 länder återstod i analysen. Sedan exkluderades fyra ytterligare variabler som saknade data för 25+ procent av de länder som återstod. För att samtliga variabler skulle kunna användas i regressionsmodellen genomfördes sedan en imputering av resterande saknade värden, där saknade värden tillgavs medianvärdet för respektive variabel. Slutligen standardiserades alla responsvariabler då de skilde sig åt i storleken på värden, där vissa värden var mellan 0-1 och andra uppgick till tiotals tusen.</p>
-</section>
-<section id="dataanalys" class="level1">
-<h1>Dataanalys</h1>
-<section id="deskriptiv-modell" class="level2">
-<h2 class="anchored" data-anchor-id="deskriptiv-modell">Deskriptiv modell</h2>
-<p>I en första deskriptiv modell inkluderades samtliga variabler för att undersöka vilka variabler som hade positiva respektive negativa samband med demokratiindex.</p>
-<div id="0aca3b5b" class="cell" data-execution_count="2">
-<div class="cell-output cell-output-display" data-execution_count="2">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">Koefficient</th>
-<th data-quarto-table-cell-role="th">Standardfel</th>
-<th data-quarto-table-cell-role="th">z</th>
-<th data-quarto-table-cell-role="th">P&gt;|z|</th>
-<th data-quarto-table-cell-role="th">[0.025</th>
-<th data-quarto-table-cell-role="th">0.975]</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">livslängd</th>
-<td>0.009</td>
-<td>0.053</td>
-<td>0.174</td>
-<td>0.862</td>
-<td>-0.094</td>
-<td>0.113</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">suicid/100k</th>
-<td>0.013</td>
-<td>0.024</td>
-<td>0.534</td>
-<td>0.594</td>
-<td>-0.035</td>
-<td>0.061</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">fetma_andel</th>
-<td>0.023</td>
-<td>0.025</td>
-<td>0.939</td>
-<td>0.348</td>
-<td>-0.025</td>
-<td>0.071</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">hdi</th>
-<td>-0.005</td>
-<td>0.121</td>
-<td>-0.044</td>
-<td>0.965</td>
-<td>-0.243</td>
-<td>0.232</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">co2_percapita</th>
-<td>-0.083</td>
-<td>0.042</td>
-<td>-1.998</td>
-<td>0.046</td>
-<td>-0.164</td>
-<td>-0.002</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">energi_percapita</th>
-<td>-0.044</td>
-<td>0.041</td>
-<td>-1.071</td>
-<td>0.284</td>
-<td>-0.123</td>
-<td>0.036</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">utbildning_andel_gdp</th>
-<td>0.004</td>
-<td>0.015</td>
-<td>0.264</td>
-<td>0.792</td>
-<td>-0.025</td>
-<td>0.032</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">andel_kvinnor_arbete</th>
-<td>0.010</td>
-<td>0.020</td>
-<td>0.520</td>
-<td>0.603</td>
-<td>-0.029</td>
-<td>0.050</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">skolår</th>
-<td>0.003</td>
-<td>0.054</td>
-<td>0.061</td>
-<td>0.952</td>
-<td>-0.102</td>
-<td>0.108</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">skatt_andel_bnp</th>
-<td>-0.005</td>
-<td>0.024</td>
-<td>-0.204</td>
-<td>0.838</td>
-<td>-0.052</td>
-<td>0.042</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">statligautgifter_andel_bnp</th>
-<td>0.034</td>
-<td>0.028</td>
-<td>1.217</td>
-<td>0.224</td>
-<td>-0.021</td>
-<td>0.088</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">gdp_per_capita</th>
-<td>0.018</td>
-<td>0.040</td>
-<td>0.439</td>
-<td>0.660</td>
-<td>-0.061</td>
-<td>0.096</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">handel_andel_gdp</th>
-<td>-0.020</td>
-<td>0.023</td>
-<td>-0.869</td>
-<td>0.385</td>
-<td>-0.065</td>
-<td>0.025</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">livstillfredsställelse</th>
-<td>0.066</td>
-<td>0.025</td>
-<td>2.678</td>
-<td>0.007</td>
-<td>0.018</td>
-<td>0.114</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">barn_per_kvinna</th>
-<td>-0.028</td>
-<td>0.031</td>
-<td>-0.895</td>
-<td>0.371</td>
-<td>-0.088</td>
-<td>0.033</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">korruption_index</th>
-<td>-0.144</td>
-<td>0.024</td>
-<td>-6.075</td>
-<td>0.000</td>
-<td>-0.191</td>
-<td>-0.098</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">mord_percapita</th>
-<td>0.000</td>
-<td>0.019</td>
-<td>0.016</td>
-<td>0.987</td>
-<td>-0.036</td>
-<td>0.037</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">död_i_konflikt_percapita</th>
-<td>-0.008</td>
-<td>0.047</td>
-<td>-0.166</td>
-<td>0.868</td>
-<td>-0.100</td>
-<td>0.084</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</section>
-<section id="kontroll-av-multikollinearitet" class="level2">
-<h2 class="anchored" data-anchor-id="kontroll-av-multikollinearitet">Kontroll av multikollinearitet</h2>
-<p>För att kunna besvara frågeställningen genomfördes först en VIF-analys för att identifiera variabler som har en hög korrelation med andra variabler.</p>
-<div id="300c4ba3" class="cell" data-execution_count="3">
-<div class="cell-output cell-output-display" data-execution_count="3">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">variable</th>
-<th data-quarto-table-cell-role="th">VIF</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>hdi</td>
-<td>57.640548</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>livslängd</td>
-<td>14.243929</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">9</th>
-<td>skolår</td>
-<td>11.494334</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">12</th>
-<td>gdp_per_capita</td>
-<td>8.855024</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">15</th>
-<td>barn_per_kvinna</td>
-<td>5.460668</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">6</th>
-<td>energi_percapita</td>
-<td>5.177395</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">5</th>
-<td>co2_percapita</td>
-<td>4.233433</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">10</th>
-<td>skatt_andel_bnp</td>
-<td>4.132875</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">11</th>
-<td>statligautgifter_andel_bnp</td>
-<td>3.594037</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">16</th>
-<td>korruption_index</td>
-<td>3.389612</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">14</th>
-<td>livstillfredsställelse</td>
-<td>3.149172</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>fetma_andel</td>
-<td>2.791518</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">8</th>
-<td>andel_kvinnor_arbete</td>
-<td>1.977248</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">2</th>
-<td>suicid/100k</td>
-<td>1.768741</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">7</th>
-<td>utbildning_andel_gdp</td>
-<td>1.725288</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">17</th>
-<td>mord_percapita</td>
-<td>1.562660</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">13</th>
-<td>handel_andel_gdp</td>
-<td>1.434958</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">18</th>
-<td>död_i_konflikt_percapita</td>
-<td>1.085799</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<p>I analysen framkom att <em>Human Development Index (HDI)</em> hade hög multikollinearitet, vilket är rimligt då det är ett sammansatt mått för bland annat utbildning, hälsa och inkomst - variabler som också finns med i modellen. Därför exkluderades HDI från modellen.</p>
-<p>Vid en ny VIF-analys fick samtliga resterande variabler en faktor under 10, vilket ofta ses som ett tillfredsställande värde vid VIF-analyser.</p>
-<div id="d9e40f53" class="cell" data-execution_count="4">
-<div class="cell-output cell-output-display" data-execution_count="4">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">variable</th>
-<th data-quarto-table-cell-role="th">VIF</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">1</th>
-<td>livslängd</td>
-<td>7.528331</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">11</th>
-<td>gdp_per_capita</td>
-<td>7.404014</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">5</th>
-<td>energi_percapita</td>
-<td>5.156669</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">8</th>
-<td>skolår</td>
-<td>4.717647</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>co2_percapita</td>
-<td>4.223140</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">14</th>
-<td>barn_per_kvinna</td>
-<td>4.204239</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">9</th>
-<td>skatt_andel_bnp</td>
-<td>3.928854</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">10</th>
-<td>statligautgifter_andel_bnp</td>
-<td>3.572159</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">15</th>
-<td>korruption_index</td>
-<td>3.380260</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">13</th>
-<td>livstillfredsställelse</td>
-<td>3.102337</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">3</th>
-<td>fetma_andel</td>
-<td>2.491351</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">7</th>
-<td>andel_kvinnor_arbete</td>
-<td>1.938464</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>suicid/100k</td>
-<td>1.767178</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">6</th>
-<td>utbildning_andel_gdp</td>
-<td>1.721572</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">16</th>
-<td>mord_percapita</td>
-<td>1.465117</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">12</th>
-<td>handel_andel_gdp</td>
-<td>1.406298</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">17</th>
-<td>död_i_konflikt_percapita</td>
-<td>1.080879</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</section>
-<section id="reducering-av-variabler" class="level2">
-<h2 class="anchored" data-anchor-id="reducering-av-variabler">Reducering av variabler</h2>
-<p>En efter en exkluderades variabler som inte uppnådde statistisk signifikans i modellen, vilket ledde till att dessa variabler exkluderades från modellen slutligen:</p>
+<section id="om-projektet" class="level2">
+<h2 class="anchored" data-anchor-id="om-projektet">Om projektet</h2>
+<p>Denna portfolio presenterar en analys av globala samhällsindikatorer utifrån data från organisationen Our World in Data.</p>
+<p>Syftet är att demonstrera ett komplett dataanalysflöde i form av:</p>
 <ul>
-<li>Mord per capita</li>
-<li>Död i konflikt per capita</li>
-<li>Genomsnittliga skolår per person</li>
-<li>Medellivslängd</li>
-<li>Utbildningskostnader som andel av GDP</li>
-<li>Suicid per 100,000 invånare</li>
-<li>Skatt som andel av BNP</li>
-<li>GDP per capita</li>
-<li>Andel kvinnor i arbete i förhållande till män</li>
-<li>Handel som andel av GDP</li>
-<li>Andel personer med fetma i populationen</li>
-<li>Energianvändning per capita</li>
+<li>insamling och bearbetning av data</li>
+<li>explorativ dataanalys genom korrelationsanalys och datavisualisering</li>
+<li>fördjupade analyser genom multipel regression och prediktiv maskininlärning</li>
 </ul>
-<p>Den slutliga modellen innehöll därmed endast variabler som uppnådde statistisk signifikans.</p>
+<p>All dataanalys är gjord i Python och rapporten är skapad med Quarto.</p>
 </section>
-<section id="slutlig-modell" class="level2">
-<h2 class="anchored" data-anchor-id="slutlig-modell">Slutlig modell</h2>
-<p>Den slutliga modellen innehöll fem variabler som är associerade med demokratiindex när andra variabler hålls konstanta.</p>
-<p>Modellen hade ett justerat R²-värde på 0,67, vilket innebär att modellen, korrigerat för antalet inkluderade variabler, kunde förklara 67 procent av variationen i demokratiindex mellan de undersökta länderna. Detta indikerar att variablerna fångar en betydande del av de faktorer som samvarierar med demokratiska nivåer, även om en stor del av variationen förklaras av andra faktorer som inte ingår i modellen.</p>
-<div id="8625a773" class="cell" data-execution_count="5">
-<div class="cell-output cell-output-display" data-execution_count="5">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">Oberoende variabel</th>
-<th data-quarto-table-cell-role="th">Antal observationer</th>
-<th data-quarto-table-cell-role="th">R-squared</th>
-<th data-quarto-table-cell-role="th">Adj. R-squared</th>
-<th data-quarto-table-cell-role="th">F-statistic</th>
-<th data-quarto-table-cell-role="th">Prob (F-statistic)</th>
-<th data-quarto-table-cell-role="th">AIC</th>
-<th data-quarto-table-cell-role="th">BIC</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>demokratiindex</td>
-<td>135</td>
-<td>0.683</td>
-<td>0.67</td>
-<td>95.29</td>
-<td>0.0</td>
-<td>-136.448</td>
-<td>-119.017</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-<div id="97270dd3" class="cell" data-execution_count="6">
-<div class="cell-output cell-output-display" data-execution_count="6">
-<div>
-
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">Koefficient</th>
-<th data-quarto-table-cell-role="th">Standardfel</th>
-<th data-quarto-table-cell-role="th">z</th>
-<th data-quarto-table-cell-role="th">P&gt;|z|</th>
-<th data-quarto-table-cell-role="th">[0.025</th>
-<th data-quarto-table-cell-role="th">0.975]</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">co2_percapita</th>
-<td>-0.105</td>
-<td>0.019</td>
-<td>-5.413</td>
-<td>0.000</td>
-<td>-0.143</td>
-<td>-0.067</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">statligautgifter_andel_bnp</th>
-<td>0.042</td>
-<td>0.018</td>
-<td>2.317</td>
-<td>0.021</td>
-<td>0.007</td>
-<td>0.078</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">livstillfredsställelse</th>
-<td>0.066</td>
-<td>0.018</td>
-<td>3.688</td>
-<td>0.000</td>
-<td>0.031</td>
-<td>0.102</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">barn_per_kvinna</th>
-<td>-0.031</td>
-<td>0.015</td>
-<td>-2.009</td>
-<td>0.045</td>
-<td>-0.061</td>
-<td>-0.001</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">korruption_index</th>
-<td>-0.143</td>
-<td>0.019</td>
-<td>-7.519</td>
-<td>0.000</td>
-<td>-0.180</td>
-<td>-0.106</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<p>Samtliga projekt utgår från en databas som jag sammanställde utifrån 25 separata dataset från <a href="https://ourworldindata.org/">Our World in Data</a>, vilket är en organisation som sammanställer och visualiserar historisk och globalt täckande statistik inom områden som fattigdom, sjukdom, hunger, klimatförändringar, krig och ojämlikhet. Den data de sammanställer kommer från flera olika källor.</p>
 </section>
-</section>
-<section id="resultat" class="level1">
-<h1>Resultat</h1>
-<p>Nedanstående variabler är associerade med demokratiindex när andra variabler hålls konstanta, och är sorterade utifrån hur starkt associerade de är med demokratiindex:</p>
+<section id="analysfrågor" class="level2">
+<h2 class="anchored" data-anchor-id="analysfrågor">Analysfrågor</h2>
+<p>Projektet undersöker bland annat:</p>
 <ul>
-<li>korruptionsindex (negativ association)</li>
-<li>livstillfredsställelse (positiv association)</li>
-<li>fertilitet (negativ association)</li>
-<li>CO₂-utsläpp per capita (positiv association)</li>
-<li>statliga utgifter som andel av BNP (positiv association)</li>
+<li>Hur samvarierar olika samhällsindikatorer på nationsnivå?</li>
+<li>Vilka faktorer är associerade med länders demokratiindex?</li>
+<li>Hur väl går det att predicera huruvida länder är demokratier utifrån kännedom om andra faktorer?</li>
 </ul>
 
 

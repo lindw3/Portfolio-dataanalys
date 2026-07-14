@@ -49,7 +49,7 @@ För att kunna besvara frågeställningen genomfördes först en VIF-analys för
 vif_initial
 ```
 
-I analysen framkom att Human Development Index (HDI) hade hög multikollinearitet, vilket är rimligt då det är ett sammansatt mått för bland annat utbildning, hälsa och inkomst - variabler som också finns med i modellen. Därför exkluderades HDI från modellen.
+I analysen framkom att *Human Development Index (HDI)* hade hög multikollinearitet, vilket är rimligt då det är ett sammansatt mått för bland annat utbildning, hälsa och inkomst - variabler som också finns med i modellen. Därför exkluderades HDI från modellen.
 
 Vid en ny VIF-analys fick samtliga resterande variabler en faktor under 10, vilket ofta ses som ett tillfredsställande värde vid VIF-analyser.
 
@@ -79,7 +79,9 @@ Den slutliga modellen innehöll därmed endast variabler som uppnådde statistis
 
 ## Slutlig modell
 
-Den slutliga modellen innehöll fem variabler som är associerade med demokratiindex när andra variabler hålls konstanta:
+Den slutliga modellen innehöll fem variabler som är associerade med demokratiindex när andra variabler hålls konstanta. 
+
+Modellen hade ett justerat R²-värde på 0,67, vilket innebär att modellen, korrigerat för antalet inkluderade variabler, kunde förklara 67 procent av variationen i demokratiindex mellan de undersökta länderna. Detta indikerar att variablerna fångar en betydande del av de faktorer som samvarierar med demokratiska nivåer, även om en stor del av variationen förklaras av andra faktorer som inte ingår i modellen.
 
 ```{python}
 model_info_final
