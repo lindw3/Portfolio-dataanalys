@@ -213,8 +213,8 @@ ul.task-list li input[type="checkbox"] {
 <section id="resultat" class="level2">
 <h2 class="anchored" data-anchor-id="resultat">Resultat</h2>
 <p>Modellerna jämfördes utifrån deras genomsnittliga accuracy vid femfaldig stratifierad cross-validation (CV-score). Till skillnad från ett enskilt tränings-/testsplit bygger detta mått på flera olika uppdelningar av träningsdatan och ger därför en mer robust uppskattning av modellernas förväntade generaliseringsförmåga.</p>
-<div id="d7947a00" class="cell" data-execution_count="2">
-<div class="cell-output cell-output-display" data-execution_count="7">
+<div id="ee065b1c" class="cell" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
 
@@ -261,8 +261,8 @@ ul.task-list li input[type="checkbox"] {
 <p>Logistisk regression uppvisade den högsta genomsnittliga CV-scoren och valdes därför som huvudmodell i den fortsatta analysen.</p>
 <p>Att logistisk regression presterade bäst kan bero på flera faktorer. För det första kan sambanden mellan samhällsindikatorerna och ett lands demokratiska styrelseskick till stor del beskrivas med gradvisa, ungefär linjära samband. För det andra är datasetet relativt litet, vilket kan göra det svårare för mer komplexa modeller, såsom Random Forest och Gradient Boosting, att identifiera stabila icke-linjära mönster. En enklare modell kan därför få bättre generaliseringsförmåga.</p>
 <p>I den bäst presterande modellen (logistik regression) såg koefficienterna ut enligt nedan, sorterat i storleksordning. Eftersom underlaget är standardiserat går de att jämföra med varandra, och kan tolkas som ett mått på hur mycket oddset för att klassificeras som en demokrati förändras när en prediktor ökar med en standardavvikelse, givet att övriga variabler hålls konstanta.</p>
-<div id="5ef931d6" class="cell" data-execution_count="3">
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div id="afa8869b" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
 
@@ -392,7 +392,7 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="rfe-analys">RFE-analys</h3>
 <p>Recursive Feature Elimination (RFE) användes för att identifiera den minsta uppsättning variabler som bibehöll hög prediktionsförmåga. Metoden tränar modellen upprepade gånger och eliminerar successivt den minst betydelsefulla prediktorn tills önskat antal variabler återstår. För varje antal variabler beräknades den genomsnittliga accuracyn med hjälp av cross-validation.</p>
 <p>Nedan presenteras en figur som illustrerar modellens Accuracy-score när den använde mellan 3-17 variabler i analysen.</p>
-<div id="07263c8a" class="cell" data-execution_count="4">
+<div id="e3078141" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -406,8 +406,8 @@ ul.task-list li input[type="checkbox"] {
 <section id="resultat-1" class="level3">
 <h3 class="anchored" data-anchor-id="resultat-1">Resultat</h3>
 <p>RFE identifierade en reducerad modell med 5 variabler som uppnådde den högsta genomsnittliga accuracyn vid cross-validation. Variablerna och deras koefficienter presenteras nedan.</p>
-<div id="0fe3715c" class="cell" data-execution_count="5">
-<div class="cell-output cell-output-display" data-execution_count="10">
+<div id="7ddd5ee8" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
 
@@ -458,8 +458,8 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p>När den reducerade modellen applicerades på testdatan lyckades den gissa rätt 77.8 procent av gångerna. Modellens precision var 86.7 procent, medan recall uppgick till 68.4 procent. Detta innebär att de länder som modellen klassificerade som demokratier oftast också var demokratier, men att modellen samtidigt missade en relativt stor andel av de faktiska demokratierna. Modellen tenderade därmed att vara försiktig med att klassificera ett land som demokrati.</p>
-<div id="f60a3b71" class="cell" data-execution_count="6">
-<div class="cell-output cell-output-display" data-execution_count="11">
+<div id="6fa81117" class="cell" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="6">
 <div>
 
 
