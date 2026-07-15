@@ -13,7 +13,9 @@ Syftet är att demonstrera ett komplett dataanalysflöde i form av:
 - explorativ dataanalys genom korrelationsanalys och datavisualisering
 - fördjupade analyser genom multipel regression och prediktiv maskininlärning
 
-All dataanalys är gjord i Python och rapporten är skapad med Quarto. Hela 
+All dataanalys är gjord i Python och rapporten är skapad med Quarto.
+
+Samtliga skript som använts för databearbetning, modellträning och rapportgenerering finns tillgängliga [i projektets GitHub-repository](https://github.com/lindw3/Portfolio-dataanalys)
 
 ## Data
 
