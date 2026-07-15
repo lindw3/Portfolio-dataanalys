@@ -360,3 +360,46 @@ def load_data():
 
 
     return datasets
+
+variable_descriptions = pd.DataFrame({
+    "Variabel": [
+        "livslängd",
+        "suicid_100k",
+        "fetma_andel",
+        "hdi",
+        "demokratiindex",
+        "co2_percapita",
+        "energi_percapita",
+        "utbildning_andel_gdp",
+        "skatt_andel_bnp",
+        "statligautgifter_andel_bnp",
+        "gini",
+        "gdp_per_capita",
+        "handel_andel_gdp",
+        "livstillfredsställelse",
+        "barn_per_kvinna",
+        "korruption_index",
+        "mord_percapita",
+        "död_i_konflikt_percapita"
+    ],
+    "Beskrivning": [
+        "Medellivslängd",
+        "Antal suicid per 100 000 invånare",
+        "Andel personer med fetma i befolkningen",
+        "Human Development Index (HDI)",
+        "Indexvärde för hur demokratiska länders valprocesser är på en skala mellan 0 och 1",
+        "CO₂-utsläpp per capita",
+        "Energianvändning per capita",
+        "Utbildningsutgifter som andel av BNP",
+        "Skatteintäkter som andel av BNP",
+        "Statliga utgifter som andel av BNP",
+        "Gini-koefficient – ett mått på ekonomisk ojämlikhet på en skala mellan 0 och 1",
+        "BNP per capita",
+        "Handel som andel av BNP",
+        "Genomsnittlig livstillfredsställelse på en skala mellan 0 och 10",
+        "Genomsnittligt antal födda barn per kvinna",
+        "Indexvärde för upplevd politisk korruption på en skala mellan 0 och 1",
+        "Antal mord per capita",
+        "Antal döda i konflikter per capita"
+    ]
+})

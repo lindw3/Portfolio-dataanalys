@@ -49,6 +49,8 @@ best_rfe_features = pd.read_csv(
     "data/results_ml/best_rfe_features.csv"
 )
 
+from scripts.load_data import variable_descriptions
+
 ```
 
 ## Frågeställning
@@ -62,6 +64,17 @@ Som målvariabel användes en binär klassificering av länder som demokratier r
 Variabeln *Democracy Index* exkluderades eftersom den direkt mäter det utfall som modellen skulle predicera. *Human Development Index (HDI)* exkluderades också eftersom det är ett sammansatt index som bygger på flera variabler som redan ingick i analysen (utbildningsnivå, förväntad livslängd och BNP per capita).
 
 Därefter exkluderades variabler med mer än 25 procent saknade värden, vilket resulterade i 17 återstående prediktorer. Kvarvarande saknade värden imputerades med respektive variabels median. Slutligen standardiserades samtliga prediktorer för att göra variabler med olika skalor jämförbara.
+
+
+<details>
+<summary><strong>Beskrivning av analysens variabler</strong></summary>
+
+```{python}
+variable_descriptions.style.hide(axis="index")
+```
+
+</details>
+
 
 # Prediktion med maskininlärningsmodeller
 
@@ -94,7 +107,7 @@ Stacking kombinerar flera olika maskininlärningsmodeller genom att använda der
 Modellerna jämfördes utifrån deras genomsnittliga accuracy vid femfaldig stratifierad cross-validation (CV-score). Till skillnad från ett enskilt tränings-/testsplit bygger detta mått på flera olika uppdelningar av träningsdatan och ger därför en mer robust uppskattning av modellernas förväntade generaliseringsförmåga.
 
 ```{python}
-model_comparison
+model_comparison.style.hide(axis="index")
 ```
 
 Logistisk regression uppvisade den högsta genomsnittliga CV-scoren och valdes därför som huvudmodell i den fortsatta analysen.
@@ -104,7 +117,7 @@ Att logistisk regression presterade bäst kan bero på flera faktorer. För det 
 I den bäst presterande modellen (logistik regression) såg koefficienterna ut enligt nedan, sorterat i storleksordning. Eftersom underlaget är standardiserat går de att jämföra med varandra, och kan tolkas som ett mått på hur mycket oddset för att klassificeras som en demokrati förändras när en prediktor ökar med en standardavvikelse, givet att övriga variabler hålls konstanta.
 
 ```{python}
-logreg_coefficients
+logreg_coefficients.style.hide(axis="index")
 ```
 
 
@@ -144,13 +157,13 @@ Ur RFE-analysen framkom att modellen presterade bäst när `{python} len(best_rf
 RFE identifierade en reducerad modell med `{python} len(best_rfe_features)` variabler som uppnådde den högsta genomsnittliga accuracyn vid cross-validation. Variablerna och deras koefficienter presenteras nedan.
 
 ```{python}
-logreg_coefficients_final
+logreg_coefficients_final.style.hide(axis="index")
 ```
 
 När den reducerade modellen applicerades på testdatan lyckades den gissa rätt `{python} round(float(logreg_final_summary.loc[0, "Accuracy"]) * 100, 1)` procent av gångerna. Modellens precision var `{python} round(float(logreg_final_summary.loc[0, "Precision"]) * 100, 1)` procent, medan recall uppgick till `{python} round(float(logreg_final_summary.loc[0, "Recall"]) * 100, 1)` procent. Detta innebär att de länder som modellen klassificerade som demokratier oftast också var demokratier, men att modellen samtidigt missade en relativt stor andel av de faktiska demokratierna. Modellen tenderade därmed att vara försiktig med att klassificera ett land som demokrati.
 
 ```{python}
-logreg_final_summary
+logreg_final_summary.style.hide(axis="index")
 ```
 
 ### Slutsats

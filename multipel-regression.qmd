@@ -17,21 +17,33 @@ model_info_initial,
 coef_table_final,
 model_info_final
 )
+
+from scripts.load_data import variable_descriptions
+
 ```
 
-# Frågeställning
+## Frågeställning
 
 Vilka samhällsfaktorer är associerade med demokratiindex?
 
-# Databearbetning
+## Databearbetning
 
 Analyserna är gjorda för 2021, då detta år var det år där flest länder hade tillgängliga data för de variabler som analyserades (totalt 343 länder).
 
-Först exkluderades en variabel som helt saknade data för det givna året. Därefter exkluderades samtliga länder som saknade data för 25+ procent av de variabler som återstod, vilket innebar att 135 länder återstod i analysen. Sedan exkluderades fyra ytterligare variabler som saknade data för 25+ procent av de länder som återstod. För att samtliga variabler skulle kunna användas i regressionsmodellen genomfördes sedan en imputering av resterande saknade värden, där saknade värden tillgavs medianvärdet för respektive variabel. Slutligen standardiserades alla responsvariabler då de skilde sig åt i storleken på värden, där vissa värden var mellan 0-1 och andra uppgick till tiotals tusen.
+Först exkluderades en variabel som helt saknade data för det givna året. Därefter exkluderades samtliga länder som saknade data för 25+ procent av de variabler som återstod, vilket innebar att 135 länder återstod i analysen. Sedan exkluderades fyra ytterligare variabler som saknade data för 25+ procent av de länder som återstod, vilket innebar att 18 responsvariabler återstod utöver demokratiindex. För att samtliga variabler skulle kunna användas i regressionsmodellen genomfördes sedan en imputering av resterande saknade värden, där saknade värden tillgavs medianvärdet för respektive variabel. Slutligen standardiserades alla responsvariabler då de skilde sig åt i storleken på värden, där vissa värden var mellan 0-1 och andra uppgick till tiotals tusen.
 
-# Dataanalys
+<details>
+<summary><strong>Beskrivning av analysens variabler</strong></summary>
 
-## Deskriptiv modell
+```{python}
+variable_descriptions.style.hide(axis="index")
+```
+
+</details>
+
+## Dataanalys
+
+### Deskriptiv modell
 
 I en första deskriptiv modell inkluderades samtliga variabler för att undersöka vilka variabler som hade positiva respektive negativa samband med demokratiindex.
 
@@ -41,12 +53,12 @@ coef_table_initial
 
 
 
-## Kontroll av multikollinearitet
+### Kontroll av multikollinearitet
 
 För att kunna besvara frågeställningen genomfördes först en VIF-analys för att identifiera variabler som har en hög korrelation med andra variabler.
 
 ```{python}
-vif_initial
+vif_initial.style.hide(axis="index")
 ```
 
 I analysen framkom att *Human Development Index (HDI)* hade hög multikollinearitet, vilket är rimligt då det är ett sammansatt mått för bland annat utbildning, hälsa och inkomst - variabler som också finns med i modellen. Därför exkluderades HDI från modellen.
@@ -54,11 +66,11 @@ I analysen framkom att *Human Development Index (HDI)* hade hög multikollineari
 Vid en ny VIF-analys fick samtliga resterande variabler en faktor under 10, vilket ofta ses som ett tillfredsställande värde vid VIF-analyser.
 
 ```{python}
-vif_after_hdi
+vif_after_hdi.style.hide(axis="index")
 ```
 
 
-## Reducering av variabler
+### Reducering av variabler
 
 En efter en exkluderades variabler som inte uppnådde statistisk signifikans i modellen, vilket ledde till att dessa variabler exkluderades från modellen slutligen:
 
@@ -72,26 +84,26 @@ En efter en exkluderades variabler som inte uppnådde statistisk signifikans i m
 - GDP per capita
 - Andel kvinnor i arbete i förhållande till män
 - Handel som andel av GDP
-- Andel personer med fetma i populationen
+- Andel personer med fetma i befolkningen
 - Energianvändning per capita
 
 Den slutliga modellen innehöll därmed endast variabler som uppnådde statistisk signifikans.
 
-## Slutlig modell
+### Slutlig modell
 
 Den slutliga modellen innehöll fem variabler som är associerade med demokratiindex när andra variabler hålls konstanta. 
 
-Modellen hade ett justerat R²-värde på 0,67, vilket innebär att modellen, korrigerat för antalet inkluderade variabler, kunde förklara 67 procent av variationen i demokratiindex mellan de undersökta länderna. Detta indikerar att variablerna fångar en betydande del av de faktorer som samvarierar med demokratiska nivåer, även om en stor del av variationen förklaras av andra faktorer som inte ingår i modellen.
+Modellen hade ett justerat R²-värde på 0.67, vilket innebär att modellen, korrigerat för antalet inkluderade variabler, kunde förklara 67 procent av variationen i demokratiindex mellan de undersökta länderna. Detta indikerar att variablerna fångar en betydande del av de faktorer som samvarierar med demokratiska nivåer, även om en stor del av variationen förklaras av andra faktorer som inte ingår i modellen.
 
 ```{python}
-model_info_final
+model_info_final.style.hide(axis="index")
 ```
 
 ```{python}
 coef_table_final
 ```
 
-# Resultat
+## Resultat
 
 Nedanstående variabler är associerade med demokratiindex när andra variabler hålls konstanta, och är sorterade utifrån hur starkt associerade de är med demokratiindex:
 
@@ -100,3 +112,4 @@ Nedanstående variabler är associerade med demokratiindex när andra variabler 
 - fertilitet (negativ association)
 - CO₂-utsläpp per capita (positiv association)
 - statliga utgifter som andel av BNP (positiv association)
+

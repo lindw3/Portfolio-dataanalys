@@ -17,7 +17,7 @@ All dataanalys är gjord i Python och rapporten är skapad med Quarto.
 
 ## Data
 
-Samtliga projekt utgår från en databas som jag sammanställde utifrån 24 separata dataset från [Our World in Data](https://ourworldindata.org/), vilket är en organisation som sammanställer och visualiserar historisk och globalt täckande statistik inom områden som fattigdom, sjukdom, hunger, klimatförändringar, krig och ojämlikhet. Den data de sammanställer kommer från flera olika källor.
+Samtliga projekt utgår från en databas som sammanställdes utifrån 23 separata dataset från [Our World in Data](https://ourworldindata.org/), vilket är en organisation som sammanställer och visualiserar historisk och globalt täckande statistik inom områden som fattigdom, sjukdom, hunger, klimatförändringar, krig och ojämlikhet. Den data de sammanställer kommer från flera olika källor.
 
 
 ## Analysfrågor

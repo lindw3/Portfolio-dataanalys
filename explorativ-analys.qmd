@@ -16,14 +16,26 @@ from scripts.exploration import (
     plot_gdp_vs_lönegap,
     plot_gdp_vs_andel_kvinnor_arbete
 )
+
+from scripts.load_data import variable_descriptions
 ```
 
-# Databearbetning
+## Databearbetning
 
 Analyserna är gjorda för antingen 2021 eller 2022, då dessa år var de år där flest länder hade tillgängliga data för de variabler som analyserades.
 
 
-# Korrelationsanalys
+<details>
+<summary><strong>Beskrivning av analysens variabler</strong></summary>
+
+```{python}
+variable_descriptions.style.hide(axis="index")
+```
+
+</details>
+
+
+## Korrelationsanalys
 
 För att identifiera övergripande samband mellan indikatorerna skapades en korrelationsmatris.
 
@@ -40,9 +52,9 @@ Det finns många samband som hade kunnat undersökas vidare, men i detta projekt
 
 Ovanstående samband väckte en frågeställning kring hur det kan komma sig att en ökad ekonomisk ojämlikhet kan vara associerat med ett minskat lönegap mellan könen, samtidigt som ekonomiskt utvecklade länder med större ekonomisk jämlikhet hade förhållandevis större lönegap mellan könen.
 
-# Datavisualisering
+## Datavisualisering
 
-## Samband mellan gini-koefficient och lönegap mellan könen
+### Samband mellan gini-koefficient och lönegap mellan könen
 
 Ett första steg var att visualisera hur det kommer sig att ekonomisk ojämlikhet totalt sett hänger samman med könsskillnader i löner.
 
@@ -55,7 +67,7 @@ plot_gini_vs_lönegap(lönegap_gini)
 När man granskar de länder som befinner sig på eller nedanför 0-strecket kan man notera att de tenderar att vara låg- eller medelinkomstländer.
 
 
-## Samband mellan BNP per capita och Gini-koefficient
+### Samband mellan BNP per capita och Gini-koefficient
 
 Därefter undersöktes sambandet mellan länders BNP per capita och deras Gini-koefficient.
 
@@ -66,7 +78,7 @@ Figuren visar att de länder med högst Gini-koefficienter tenderar vara medelin
 plot_gdp_vs_gini(gdp_gini)
 ```
 
-## Samband mellan BNP per capita och lönegap
+### Samband mellan BNP per capita och lönegap
 
 Slutligen undersöktes sambandet mellan BNP per capita och könsskillnader i genomsnittslön.
 
@@ -76,7 +88,7 @@ Resultatet visar att lönegapet inte följer en linjär utvecklingskurva. Positi
 plot_gdp_vs_lönegap(lönegap_gdp)
 ```
 
-## Reflektion kring resultaten
+### Reflektion kring resultaten
 
 De ovanstående figurerna ger en bra bild av hur det kommer sig att dessa samband finns mellan GDP per capita, Gini-koefficienten och lönegap mellan könen.
 
