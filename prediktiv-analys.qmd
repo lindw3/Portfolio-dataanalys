@@ -167,6 +167,6 @@ logreg_final_summary.style.hide(axis="index")
 ```
 
 ### Slutsats
-Resultaten visar att `{python} len(best_rfe_features)` samhällsindikatorer innehåller betydande information om ett lands demokratiska styrelseskick. Den reducerade logistiska regressionsmodellen uppnådde en genomsnittlig accuracy på `{python} round(float(rfe_summary["cv_accuracy_mean"].max()) * 100, 1)` procent vid cross-validation, vilket indikerar att demokratier och autokratier i stor utsträckning kan särskiljas utifrån de inkluderade variablerna. När modellen därefter utvärderades på det separata testsetet uppnåddes en accuracy på `{python} round(float(logreg_final_summary.loc[0, "Accuracy"]) * 100, 1)` procent.
+Resultaten visar att `{python} len(best_rfe_features)` samhällsindikatorer innehåller betydande information om ett lands demokratiska styrelseskick. Den reducerade logistiska regressionsmodellen uppnådde en genomsnittlig accuracy på `{python} round(float(rfe_summary["cv_accuracy_mean"].max()) * 100, 1)` procent vid cross-validation, vilket indikerar att demokratier och autokratier i stor utsträckning kan särskiljas utifrån de inkluderade variablerna. När modellen därefter utvärderades på det separata testsetet gissade den rätt på `{python} round(float(logreg_final_summary.loc[0, "Accuracy"]) * 100, 1)` procent av länderna.
 
 

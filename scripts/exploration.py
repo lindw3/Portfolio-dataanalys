@@ -442,7 +442,7 @@ def plot_gdp_vs_andel_kvinnor_arbete(gdp_andel_kvinnor_arbete):
 
             y=alt.Y(
                 "andel_kvinnor_arbete:Q",
-                title="Andel kvinnor i arbete (%)",
+                title="Kvinnor i arbete som andel av män, (%)",
                 scale=alt.Scale(
                     domain=[0, 100]
                     ),
